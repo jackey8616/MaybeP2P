@@ -30,7 +30,7 @@ class Peer(threading.Thread):
     def run(self):
         while not self.stopped:
             (data, addr) = self.serverSock.recvfrom(128 * 1024)
-            data = json.loads(data)
+            data = json.loads(data.decode())
             if data['uuid_from'] != self.uuid:
                 print(data)
         self.serverSock.close()
@@ -44,23 +44,9 @@ class Peer(threading.Thread):
             'uuid_from': self.uuid,
             'data': msg
         })
-        sock.sendto(message, addr)
+        sock.sendto(message.encode(), addr)
         sock.close()
 
     def broadcastData(self, msg, port=25565):
         self.sendData(msg, ('255.255.255.255', port))
 
-if __name__ == '__main__':
-    logging.basicConfig(level=logging.DEBUG)
-    peer = Peer()
-    peer._initServerSock()
-    peer.start()
-    peer.broadcastData(peer.uuid)
-    
-    while True:
-        try:
-            raw = raw_input('Command: ')
-        except KeyboardInterrupt:
-            peer.stopped = True
-            peer.broadcastData('Exit')
-            break
