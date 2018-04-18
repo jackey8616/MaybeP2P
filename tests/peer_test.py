@@ -13,6 +13,9 @@ class TestPeer:
         p2 = Peer(serverPort=25566)
         p2._initServerSock()
         p2.start()
+
+        p.sendData('Test', ('0.0.0.0', 25566))
+
         p.stopped = True
         p2.stopped = True
 

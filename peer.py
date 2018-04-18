@@ -24,9 +24,6 @@ class Peer(threading.Thread):
         self.serverSock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
         self.serverSock.bind(self.serverAddr)
 
-    def _handlePeerConnect(self):
-        pass
-
     def run(self):
         while not self.stopped:
             (data, addr) = self.serverSock.recvfrom(128 * 1024)
