@@ -1,21 +1,45 @@
-import logging
+import sys, logging
+
 from peer import Peer
 
-def main():
+if sys.version_info > (3, 0):
+    raw_input = input
+
+def main(argv):
+    addr = None
+    syncAddr = None
+    for each in argv:
+        if '--addr=' in each:
+            if ':' in each:
+                addr = each[7:]
+            else:
+                addr = each[7:] + ':25565'
+        elif '--sync-addr=' in each:
+            syncAddr = each[12:]
+
     logging.basicConfig(level=logging.DEBUG)
-    peer = Peer()
+    if addr:
+        peer = Peer(serverAddr=addr.split(':')[0], serverPort=addr.split(':')[1])
+    else:
+        peer = Peer()
     peer._initServerSock()
     peer.start()
-    peer.broadcastData(peer.uuid)
+    if syncAddr:
+        peer._joinNetFromPeer(syncAddr)
+        peer._syncListFromPeer(syncAddr)
     
     while True:
         try:
-            raw = input('Command: ')
+            raw = raw_input('')
+            if raw == '':
+                continue
+            elif raw == 'peers':
+                for (pid, host) in peer.peers.items():
+                    print((pid, host))
         except KeyboardInterrupt:
-            peer.stopped = True
-            peer.broadcastData('Exit')
+            peer.exit()
             break
 
 if __name__ == '__main__':
-    main()
+    main(sys.argv)
 
