@@ -6,7 +6,7 @@ from protocol.message import JOIN, LIST, QUIT, REPL, TEST
 
 @pytest.fixture(scope='module')
 def peer(request):
-    p = Peer()
+    p = Peer('0.0.0.0', 25565)
     p._initServerSock()
     p.start()
 
@@ -18,7 +18,7 @@ def peer(request):
 
 @pytest.fixture(scope='module')
 def peerConnection(request, peer):
-    peerConn = PeerConnection('123', '127.0.0.1', 25565, peer=peer)
+    peerConn = PeerConnection('123', '0.0.0.0', 25565, peer=peer)
 
     def fin():
         peerConn.close()
