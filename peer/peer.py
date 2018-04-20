@@ -1,12 +1,12 @@
-import logging, socket, threading
+import sys, logging, socket, threading, traceback
 from uuid import uuid4
-try:
-    # Python 3
-    import Queue as queue
-except ImportError:
+if sys.version_info > (3, 0):
     import queue
+    from .connection import PeerConnection
+else:
+    import Queue as queue
+    from connection import PeerConnection
 
-from connection import PeerConnection
 
 class PeerInfo:
 
@@ -75,7 +75,7 @@ class Peer(threading.Thread):
 
     def exit(self):
         self.stopped = True
-        self.sendToNet('QUIT', self.id, waitReply=False)
+        #self.sendToNet('QUIT', self.id, waitReply=False)
         self.sendToPeer(self.peerInfo.addr[0], self.peerInfo.addr[1], 'QUIT', self.id, waitReply=False)
 
     def sendToPeer(self, host, port, msgType, msgData, pid=None, waitReply=True):

@@ -1,6 +1,9 @@
-import logging, json
+import sys, logging, json
 
-from message import JOIN, LIST, QUIT, REPL, TEST
+if sys.version_info > (3, 0):
+    from .message import JOIN, LIST, QUIT, REPL, TEST
+else:
+    from message import JOIN, LIST, QUIT, REPL, TEST
 #,SYNC, MESG, ERRO
 
 class Protocol:
@@ -21,7 +24,10 @@ class Protocol:
         }
 
     def _addHandler(self, name, handler):
-        self._handlers[name] = handler
+        try:
+            self._handlers[name] = handler
+        except Exception as e:
+            print(e)
 
     def encoder(self, msgType, msgData=None):
         jsonData = { 'type': msgType }

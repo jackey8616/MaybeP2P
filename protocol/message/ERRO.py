@@ -1,5 +1,9 @@
-import logging
-from message import Message
+import sys, logging
+
+if sys.version_info > (3, 0):
+    from .message import Message
+else:
+    from message import Message
 
 class ERRO(Message):
 

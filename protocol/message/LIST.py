@@ -1,5 +1,9 @@
+import sys
 
-from message import Message
+if sys.version_info > (3, 0):
+    from .message import Message
+else:
+    from message import Message
 
 class LIST(Message):
 

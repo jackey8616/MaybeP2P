@@ -1,6 +1,9 @@
-import logging
+import sys, logging
 
-from message import Message
+if sys.version_info > (3, 0):
+    from .message import Message
+else:
+    from message import Message
 
 class JOIN(Message):
 

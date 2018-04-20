@@ -36,6 +36,8 @@ def main(argv):
             elif raw == 'peers':
                 for (pid, host) in peer.peers.items():
                     print((pid, host))
+            elif raw == 'test':
+                print('test')
         except KeyboardInterrupt:
             peer.exit()
             break
