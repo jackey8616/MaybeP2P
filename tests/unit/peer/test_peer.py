@@ -11,28 +11,6 @@ class TestPeerInfo:
 
 class TestPeer:
 
-
-    @pytest.mark.skip('Temp skip')
-    def test_peer(self):
-        p = Peer()
-        assert p.peerInfo.addr == ('0.0.0.0', 25565)
-        p._initServerSock()
-        assert p.serverSock
-        p.start()
-
-        p2 = Peer(serverPort=25566)
-        assert p2.peerInfo.addr == ('0.0.0.0', 25566)
-        p2._initServerSock()
-        p2.start()
-
-        p.stopped = True
-        p2.stopped = True
-
-        p.exit()
-        p2.exit()
-        assert p.stopped
-        assert p2.stopped
-
     def test__initServerSock(self, peer):
         pass
 
@@ -55,8 +33,10 @@ class TestPeer:
         pass
 
     def test_addPeer(self, peer):
-        pass
+        assert peer.addPeer('000', '111', '222') == True
+        assert peer.addPeer('000', '444', '555') == False
 
     def test_getPeerByHost(self, peer):
-        pass
+        assert peer.getPeerByHost(('111', 222)) == '000'
+        assert peer.getPeerByHost(('444', 555)) == None
 

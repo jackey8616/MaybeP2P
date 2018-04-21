@@ -141,9 +141,9 @@ class Peer(threading.Thread):
     def removePeer(self, pid):
         self.peers.pop(pid, None)
 
-    def getPeerByHost(self, host):
+    def getPeerByHost(self, queryHost):
         for (pid, host) in self.peers.items():
-            if host == host:
+            if host == queryHost:
                 return pid
         return None
 

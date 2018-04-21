@@ -14,8 +14,9 @@ class Message:
     def __RES(self, *data):
         raise NotImplementedError
 
-    def encoder(self):
-        pass
+    @staticmethod
+    def wrapperS():
+        raise NotImplementedError
 
-    def decoder(self):
-        pass
+    def wrapper(self):
+        raise NotImplementedError

@@ -1,13 +1,8 @@
 import pytest
 
-from protocol.message.message import Message
+from protocol.message import Message
 
 class TestMessage:
-
-    @pytest.fixture(scope='session')
-    def message(self):
-        m = Message(None, None)
-        return m
 
     @pytest.mark.skip('Private function')
     def test___REQ(self, message):
@@ -18,3 +13,11 @@ class TestMessage:
     def test___RES(self, message):
         with pytest.raises(NotImplementedError):
             message.__RES(())
+    
+    def test_wrapperS(self):
+        with pytest.raises(NotImplementedError):
+            Message.wrapperS() 
+
+    def test_wrapper(self, message):
+        with pytest.raises(NotImplementedError):
+            message.wrapper()
