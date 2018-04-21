@@ -43,14 +43,10 @@ class JOIN(Message):
     def packetS(pkType, peer, peerConn):
         if pkType == 'REQ':
             data = 'REQ,%s,%s,%s' % (peer.id, peer.peerInfo.addr[0], peer.peerInfo.addr[1])
-        elif pyType == 'RES':
+        elif pkType == 'RES':
             data = 'RES,%s,%s,%s' % (peer.id, peer.peerInfo.addr[0], peer.peerInfo.addr[1])
         return len(data), data
 
     def packet(self, pkType, peer, peerConn):
-        if pkType == 'REQ':
-            data = 'REQ,%s,%s,%s' % (peer.id, peer.peerInfo.addr[0], peer.peerInfo.addr[1])
-        elif pkType == 'RES':
-            data = 'RES,%s,%s,%s' % (peer.id, peer.peerInfo.addr[0], peer.peerInfo.addr[1])
-        return len(data), data
+        return JOIN.packetS(pkType, peer, peerConn)
 

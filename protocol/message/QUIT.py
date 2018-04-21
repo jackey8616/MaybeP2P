@@ -36,10 +36,5 @@ class QUIT(Message):
         return len(data), data
 
     def packet(self, pkType, peer, peerConn):
-        if pkType == 'REQ':
-            pass
-        elif pyType == 'RES':
-            pass
-        data = peer.id
-        return len(data), data
+        return QUIT.packetS(pkType, peer, peerConn)
 
