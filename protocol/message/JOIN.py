@@ -1,4 +1,4 @@
-import sys, logging
+import sys, logging, traceback
 
 if sys.version_info > (3, 0):
     from .message import Message
@@ -19,6 +19,7 @@ class JOIN(Message):
             elif pkType == 'RES':
                 self.__RES((pid, addr, port))
         except Exception as e:
+            traceback.print_exc()
             self.peerConn.sendData('ERRO', e)
         finally:
             self.peer.lock.release()
@@ -26,7 +27,8 @@ class JOIN(Message):
     def __REQ(self, *data):
         (pid, addr, port), = data
         if self.peer.addPeer(pid, addr, port):
-            self.peerConn.sendData('JOIN', 'RES,%s,%s,%s' % (self.peer.id, self.peer.peerInfo.addr[0], self.peer.peerInfo.addr[1]))
+            message = self.peerConn.protocol.wrapper('JOIN', 'RES')
+            self.peerConn.sendProtocolData(message)
         else:
             self.peerConn.sendData('ERRO', 'Peer %s exists' % pid)
 
@@ -36,4 +38,19 @@ class JOIN(Message):
             logging.debug('Peer added pid {%s} at %s:%s' % (pid, addr, port))
         else:
             self.peerConn.sendData('ERRO', 'Peer %s exists' % pid)
+
+    @staticmethod
+    def packetS(pkType, peer, peerConn):
+        if pkType == 'REQ':
+            data = 'REQ,%s,%s,%s' % (peer.id, peer.peerInfo.addr[0], peer.peerInfo.addr[1])
+        elif pyType == 'RES':
+            data = 'RES,%s,%s,%s' % (peer.id, peer.peerInfo.addr[0], peer.peerInfo.addr[1])
+        return len(data), data
+
+    def packet(self, pkType, peer, peerConn):
+        if pkType == 'REQ':
+            data = 'REQ,%s,%s,%s' % (peer.id, peer.peerInfo.addr[0], peer.peerInfo.addr[1])
+        elif pkType == 'RES':
+            data = 'RES,%s,%s,%s' % (peer.id, peer.peerInfo.addr[0], peer.peerInfo.addr[1])
+        return len(data), data
 

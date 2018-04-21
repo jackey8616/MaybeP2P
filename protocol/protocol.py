@@ -1,4 +1,4 @@
-import sys, logging, json
+import sys, logging, json, struct
 
 if sys.version_info > (3, 0):
     from .message import JOIN, LIST, QUIT, REPL, TEST
@@ -6,46 +6,42 @@ else:
     from message import JOIN, LIST, QUIT, REPL, TEST
 #,SYNC, MESG, ERRO
 
+messages = {
+    'JOIN': JOIN,
+    'LIST': LIST,
+#    'NAME': NAME,
+#    'SYNC': SYNC,
+#    'MESG': MESG,
+    'QUIT': QUIT,
+    'REPL': REPL,
+#    'ERRO': ERRO
+    'TEST': TEST,
+}
+
 class Protocol:
 
-    def __init__(self, peerConn, peer):
+    def __init__(self, name, peerConn, peer):
+        self._name = name
         self._peerConn = peerConn
         self._peer = peer
-        self._handlers = {
-            'JOIN': JOIN(peer, peerConn),
-            'LIST': LIST(peer, peerConn),
-#            'NAME': NAME(peer, peerConn),
-#            'SYNC': SYNC(),
-#            'MESG': MESG(),
-            'QUIT': QUIT(peer, peerConn),
-            'REPL': REPL(peer, peerConn),
-#            'ERRO': ERRO()
-            'TEST': TEST(peer, peerConn),
-        }
+        self._messages = {}
 
-    def _addHandler(self, name, handler):
-        try:
-            self._handlers[name] = handler
-        except Exception as e:
-            print(e)
+        self._messageRegister()
 
-    def encoder(self, msgType, msgData=None):
-        jsonData = { 'type': msgType }
-        if msgType in self._handlers:
-            jsonData['data'] = self._handlers[msgType].encoder(self._peerConn, msgData)
-        else:
-            jsonData['data'] = self._handlers['MESG'].encoder(self._peerConn, msgData)
-        return json.dumps(jsonData)
-           
-    def decoder(self, msgData):
-        jsonData = json.loads(msgData)
-        msgType, msgData = (jsonData['type'], jsonData['data'])
-        if jsonData['uuid_from'] == self._peerConn.peer.peerInfo.uuid:
-            self._peerConn.close()
-            return       
+    def _messageRegister(self):
+        global messages
+        for (name, message) in messages.items():
+            self._messages[name] = message(self._peer, self._peerConn)
 
-        if msgType in self._handlers:
-            return self._handlers[msgType].decoder(self._peerConn, msgData)
-        else:
-            return self._handlers['ERRO'].decoder(self._peerConn, msgData)
+    @staticmethod
+    def wrapperS(peer, peerConn, msgType, pkType):
+        global messages
+        msgLen, msgData = messages[msgType].packetS(pkType, peer, peerConn)
+        message = struct.pack('!12s4sL%ds' % msgLen, self._name.encode(), msgType.encode(), msgLen, msgData.encode())
+        return message
+
+    def wrapper(self, msgType, pkType):
+        msgLen, msgData = self._messages[msgType].packet(pkType, self._peer, self._peerConn)
+        message = struct.pack('!12s4sL%ds' % msgLen, self._name.encode(), msgType.encode(), msgLen, msgData.encode())
+        return message
 

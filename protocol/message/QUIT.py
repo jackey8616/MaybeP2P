@@ -26,3 +26,20 @@ class QUIT(Message):
     def __RES(self, *data):
         pass
 
+    @staticmethod
+    def packetS(pkType, peer, peerConn):
+        if pkType == 'REQ':
+            pass
+        elif pyType == 'RES':
+            pass
+        data = peer.id
+        return len(data), data
+
+    def packet(self, pkType, peer, peerConn):
+        if pkType == 'REQ':
+            pass
+        elif pyType == 'RES':
+            pass
+        data = peer.id
+        return len(data), data
+

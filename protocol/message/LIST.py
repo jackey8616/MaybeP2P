@@ -23,12 +23,31 @@ class LIST(Message):
             self.peer.lock.release()
 
     def __REQ(self, *data):
-        for (pid, host) in self.peer.peers.items():
-            if pid != self.peer.id and pid != self.peerConn.id:
-                self.peerConn.sendData('LIST', 'RES,%s,%s,%s' % (pid, host[0], host[1]))
+        message = self.peerConn.protocol.wrapper('LIST', 'RES')
+        self.peerConn.sendProtocolData(message)
 
     def __RES(self, *data):
-        (pid, addr, port), = data
-        self.peer.addPeer(pid, addr, port)
+        for each in data.split(','):
+            (pid, addr, port) = each.split('|')
+            self.peer.addPeer(pid, addr, port)
         print(self.peer.peers)
+
+    @staticmethod
+    def packetS(pkType, peer, peerConn):
+        if pkType == 'REQ':
+            data = 'REQ'
+        elif pyType == 'RES':
+            data = 'RES'
+            for (pid, host) in peer.peers.items():
+                data += ',%s|%s|%s' % (pid, host[0], host[1])
+        return len(data), data
+
+    def packet(self, pkType, peer, peerConn):
+        if pkType == 'REQ':
+            data = 'REQ'
+        elif pkType == 'RES':
+            data = 'RES'
+            for (pid, host) in peer.peers.items():
+                data += ',%s|%s|%s' % (pid, host[0], host[1])
+        return len(data), data
 

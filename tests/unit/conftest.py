@@ -2,6 +2,7 @@ import pytest
 
 from peer.peer import Peer
 from peer.connection import PeerConnection
+from protocol import Protocol
 from protocol.message import JOIN, LIST, QUIT, REPL, TEST
 
 @pytest.fixture(scope='module')
@@ -18,13 +19,18 @@ def peer(request):
 
 @pytest.fixture(scope='module')
 def peerConnection(request, peer):
-    peerConn = PeerConnection('123', '0.0.0.0', 25565, peer=peer)
+    peerConn = PeerConnection(None, peer, '0.0.0.0', 25565)
 
     def fin():
-        peerConn.close()
+        peerConn.exit()
 
     request.addfinalizer(fin)
     return peerConn
+
+@pytest.fixture(scope='module')
+def protocol(peer, peerConnection):
+    p = Protocol('name', peer, peerConnection)
+    return p
 
 @pytest.fixture(scope='module')
 def jOIN(peer, peerConnection):

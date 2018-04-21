@@ -1,10 +1,11 @@
-import sys, socket, struct, traceback
+import sys, threading, logging, socket, struct, traceback
 
 from protocol import Protocol
 
-class PeerConnection:
+class PeerConnection(threading.Thread):
 
-    def __init__(self, peerId, addr, port, peer, sock=None):
+    def __init__(self, peerId, peer, addr=None, port=None, sock=None):
+        threading.Thread.__init__(self)
         self.stopped = False
 
         self.id = peerId
@@ -18,12 +19,27 @@ class PeerConnection:
             self.sd = self.sock.makefile('rw', None)
         else:
             self.sd = self.sock.makefile('rw', 0)
-        self.protocol = Protocol(self, peer)
+        self.protocol = Protocol('ClassicV1', self, peer)
+
+    def run(self):
+        protoType, msgType, msgData = self.recvData()
+        self.protocol._messages[msgType].handler(msgData)
+        logging.debug((protoType, msgType, msgData))
+        self.exit()
+
+    def sendProtocolData(self, msg):
+        try:
+            self.sd.write(msg.decode())
+            self.sd.flush()
+        except:
+            return False
+        return True
 
     def sendData(self, msgType, msgData):
         try:
-            msgLen = len(msgData)
-            message = struct.pack('!4sL%ds' % msgLen, msgType.encode(), msgLen, msgData.encode())
+            message = self.protocol.wrapper(msgType)
+        #    msgLen = len(msgData)
+        #    message = struct.pack('!4sL%ds' % msgLen, msgType.encode(), msgLen, msgData.encode())
         #    message = self.protocol.encoder(msgType, msgData)
             self.sd.write(message.decode())
             self.sd.flush()
@@ -33,10 +49,11 @@ class PeerConnection:
         
     def recvData(self):
         try:
+            protoType = self.sd.read(12).replace('\x00', '')
             msgtype = self.sd.read(4)
             #print(msgtype)
             if not msgtype:
-                return(None, None)
+                return(None, None, None)
             lenstr = self.sd.read(4)
             msglen = int(struct.unpack('!L', lenstr.encode())[0])
             msg = ""
@@ -48,13 +65,13 @@ class PeerConnection:
                 msg += data
 
             if len(msg) != msglen:
-                return (None, None)
+                return (None, None, None)
         except:
             traceback.print_exc()
-            return (None, None)
-        return (msgtype, msg)
+            return (None, None, None)
+        return (protoType, msgtype, msg)
 
-    def close(self):
+    def exit(self):
         self.sock.close()
         self.sock = None
         self.sd = None
