@@ -41,10 +41,7 @@ class JOIN(Message):
 
     @staticmethod
     def packetS(pkType, peer, peerConn):
-        if pkType == 'REQ':
-            data = 'REQ,%s,%s,%s' % (peer.id, peer.peerInfo.addr[0], peer.peerInfo.addr[1])
-        elif pkType == 'RES':
-            data = 'RES,%s,%s,%s' % (peer.id, peer.peerInfo.addr[0], peer.peerInfo.addr[1])
+        data = '%s,%s,%s,%s' % (pkType, peer.id, peer.peerInfo.addr[0], peer.peerInfo.addr[1])
         return len(data), data
 
     def packet(self, pkType, peer, peerConn):
