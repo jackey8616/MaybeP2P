@@ -4,15 +4,13 @@ from protocol.message import Message
 
 class TestMessage:
 
-    @pytest.mark.skip('Private function')
     def test___REQ(self, message):
         with pytest.raises(NotImplementedError):
-            message.__REQ(())
+            message._Message__REQ()
 
-    @pytest.mark.skip('Private function')
     def test___RES(self, message):
         with pytest.raises(NotImplementedError):
-            message.__RES(())
+            message._Message__RES()
     
     def test_wrapperS(self):
         with pytest.raises(NotImplementedError):

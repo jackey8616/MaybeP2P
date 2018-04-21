@@ -1,4 +1,4 @@
-import sys
+import sys, traceback
 
 if sys.version_info > (3, 0):
     from .message import Message
@@ -10,14 +10,15 @@ class LIST(Message):
     def __init__(self, peer, peerConn):
         Message.__init__(self, peer, peerConn)
 
-    def handle(self, msgData):
+    def handler(self, msgData):
         try:
             self.peer.lock.acquire()
-            if msgData.startwith('REQ'):
+            if msgData.startswith('REQ'):
                 self.__REQ(())
-            elif msgData.startwith('RES'):
-                self.__RES((msgData[4:].split(',')))
+            elif msgData.startswith('RES'):
+                self.__RES((msgData[4:]))
         except Exception as e:
+            traceback.print_exc()
             self.peerConn.sendData('ERRO', e)
         finally:
             self.peer.lock.release()
@@ -25,11 +26,13 @@ class LIST(Message):
     def __REQ(self, *data):
         message = self.peerConn.protocol.wrapper('LIST', 'RES')
         self.peerConn.sendProtocolData(message)
+        print(message)
 
     def __RES(self, *data):
-        for each in data.split(','):
+        for each in data[0].split(','):
             (pid, addr, port) = each.split('|')
-            self.peer.addPeer(pid, addr, port)
+            if pid != self.peer.id:
+                self.peer.addPeer(pid, addr, port)
         print(self.peer.peers)
 
     @staticmethod
