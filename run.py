@@ -8,6 +8,7 @@ if sys.version_info > (3, 0):
 def main(argv):
     addr = None
     syncAddr = None
+    syncDNS = None
     for each in argv:
         if '--addr=' in each:
             if ':' in each:
@@ -16,6 +17,8 @@ def main(argv):
                 addr = each[7:] + ':25565'
         elif '--sync-addr=' in each:
             syncAddr = each[12:]
+        elif '--sync-DNS=' in each:
+            syncDNS = each[11:]
 
     logging.basicConfig(level=logging.DEBUG)
     if addr:
@@ -27,6 +30,12 @@ def main(argv):
     if syncAddr:
         peer._joinNetFromPeer(syncAddr)
         peer._syncListFromPeer(syncAddr)
+    elif syncDNS:
+        peer._joinNetFromDNS(syncDNS)
+    else:
+        logging.debug('You have to manual give a peer\'s ip or DNS domain for sync.')
+        logging.debug('Or peer would not sync to any net.')
+        logging.debug('Unless this is first peer.')
     
     while True:
         try:

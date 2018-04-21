@@ -33,7 +33,7 @@ class JOIN(Message):
     def __RES(self, *data):
         (pid, addr, port), = data
         if self.peer.addPeer(pid, addr, port):
-            logging.debug('Peer added pid: %s' % pid)
+            logging.debug('Peer added pid {%s} at %s:%s' % (pid, addr, port))
         else:
             self.peerConn.sendData('ERRO', 'Peer %s exists' % pid)
 

@@ -1,4 +1,5 @@
 import sys, logging, socket, threading, traceback
+import dns.resolver
 from uuid import uuid4
 if sys.version_info > (3, 0):
     import queue
@@ -18,8 +19,11 @@ class Peer(threading.Thread):
 
     def __init__(self, serverAddr='0.0.0.0', serverPort=25565):
         threading.Thread.__init__(self)
-        self.peerInfo = PeerInfo((serverAddr, int(serverPort)), 'Active')
-        logging.debug((serverAddr, serverPort))
+        self.listenHost = (serverAddr, int(serverPort))
+        logging.debug('Listening at %s:%d' % (self.listenHost))
+
+        self.peerInfo = PeerInfo((self._initServerHost(), int(serverPort)), 'Active')
+        logging.debug('Link IP: %s' % self.peerInfo.addr[0])
         self.stopped = False
         self.lock = threading.RLock()
 
@@ -28,11 +32,18 @@ class Peer(threading.Thread):
         self.msgs = queue.Queue()
         logging.info('Inited Peer %s' % self.id)
 
+    def _initServerHost(self):
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.connect(('www.google.com', 80))
+        host = s.getsockname()[0]
+        s.close()
+        return host
+
     def _initServerSock(self):
         try:
             self.serverSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.serverSock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-            self.serverSock.bind(self.peerInfo.addr)
+            self.serverSock.bind(self.listenHost)
             self.serverSock.listen(5)
             logging.info('Inited server socket')
         except:
@@ -45,6 +56,12 @@ class Peer(threading.Thread):
         msgType = 'JOIN'
         msgData ='REQ,%s,%s,%d' % (self.id, self.peerInfo.addr[0], self.peerInfo.addr[1])
         self.sendToPeer(addr, port, msgType, msgData)
+
+    def _joinNetFromDNS(self, remoteDNS):
+        peersInDNS = dns.resolver.query(remoteDNS, 'TXT', raise_on_no_answer=True)
+        for each in peersInDNS:
+            addr, port = str(each)[1:-1].split(':')
+            self.sendToPeer(addr, port, 'JOIN', 'REQ,%s,%s,%s' % (self.id, self.peerInfo.addr[0], self.peerInfo.addr[1]))
 
     def _syncListFromPeer(self, remoteHost):
         pid = self.getPeerByHost(remoteHost)
@@ -75,7 +92,7 @@ class Peer(threading.Thread):
 
     def exit(self):
         self.stopped = True
-        #self.sendToNet('QUIT', self.id, waitReply=False)
+        self.sendToNet('QUIT', self.id, waitReply=False)
         self.sendToPeer(self.peerInfo.addr[0], self.peerInfo.addr[1], 'QUIT', self.id, waitReply=False)
 
     def sendToPeer(self, host, port, msgType, msgData, pid=None, waitReply=True):
