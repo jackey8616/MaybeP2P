@@ -34,20 +34,12 @@ class LIST(Message):
 
     @staticmethod
     def packetS(pkType, peer, peerConn):
-        if pkType == 'REQ':
-            data = 'REQ'
-        elif pyType == 'RES':
-            data = 'RES'
+        data = pkType
+        if pkType == 'RES':
             for (pid, host) in peer.peers.items():
                 data += ',%s|%s|%s' % (pid, host[0], host[1])
         return len(data), data
 
     def packet(self, pkType, peer, peerConn):
-        if pkType == 'REQ':
-            data = 'REQ'
-        elif pkType == 'RES':
-            data = 'RES'
-            for (pid, host) in peer.peers.items():
-                data += ',%s|%s|%s' % (pid, host[0], host[1])
-        return len(data), data
+        return LIST.packetS(pkType, peer, peerConn)
 
