@@ -1,9 +1,10 @@
 import sys, logging, traceback
 
-if sys.version_info > (3, 0):
-    from .message import Message
-else:
-    from message import Message
+from protocol.message import Message
+#if sys.version_info > (3, 0):
+#    from .message import Message
+#else:
+#    from message import Message
 
 class JOIN(Message):
 

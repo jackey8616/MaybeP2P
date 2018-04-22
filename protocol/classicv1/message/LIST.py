@@ -1,9 +1,6 @@
 import sys, traceback
 
-if sys.version_info > (3, 0):
-    from .message import Message
-else:
-    from message import Message
+from protocol.message import Message
 
 class LIST(Message):
 
@@ -26,7 +23,6 @@ class LIST(Message):
     def __REQ(self, *data):
         message = self.peerConn.protocol.wrapper('LIST', 'RES')
         self.peerConn.sendProtocolData(message)
-        print(message)
 
     def __RES(self, *data):
         for each in data[0].split(','):

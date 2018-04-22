@@ -6,7 +6,7 @@ class Message:
         self.peerConn = peerConn
 
     def handler(self, msgData):
-        pass
+        raise NotImplementedError
 
     def __REQ(self, *data):
         raise NotImplementedError

@@ -1,9 +1,6 @@
 import sys
 
-if sys.version_info > (3, 0):
-    from .message import Message
-else:
-    from message import Message
+from protocol.message import Message
 
 class QUIT(Message):
 

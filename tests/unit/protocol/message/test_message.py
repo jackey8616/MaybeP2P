@@ -4,6 +4,10 @@ from protocol.message import Message
 
 class TestMessage:
 
+    def test_handler(self, message):
+        with pytest.raises(NotImplementedError):
+            message.handler(None)
+
     def test___REQ(self, message):
         with pytest.raises(NotImplementedError):
             message._Message__REQ()

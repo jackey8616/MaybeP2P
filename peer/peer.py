@@ -80,7 +80,7 @@ class Peer(threading.Thread):
     def exit(self):
         self.stopped = True
         self.sendProtocolToNet('QUIT', 'REQ', waitReply=False)
-        self.sendProtocolToPeer(self.peerInfo.addr[0], self.peerInfo.addr[1], 'QUIT', 'REQ', waitReply=False)
+        self.sendProtocolToPeer(self.listenHost[0], self.listenHost[1], 'QUIT', 'REQ', waitReply=False)
 
     def sendProtocolToPeer(self, host, port, msgType, pkType, pid=None, waitReply=True):
         msgReply = []
@@ -96,7 +96,7 @@ class Peer(threading.Thread):
                     oneReply = peerConn.recvData()
             peerConn.exit()
         except Exception as e:
-            print(e)
+            traceback.print_exc()
         for (protoType, msgType, msgData) in msgReply:
             peerConn.protocol._messages[msgType].handler(msgData)
         return msgReply
@@ -114,7 +114,7 @@ class Peer(threading.Thread):
                     oneReply = peerConn.recvData()
             peerConn.exit()
         except Exception as e:
-            print(e)
+            traceback.print_exc()
         for each in msgReply:
             peerConn.protocol._messages[each[0]].handler(each[1])
         return msgReply
@@ -122,6 +122,7 @@ class Peer(threading.Thread):
     def sendProtocolToNet(self, msgType, pkType, waitReply=True):
         netReply = []
         for (pid, host) in self.peers.items():
+            print(pid, host)
             netReply.append({ pid: self.sendProtocolToPeer(host[0], host[1], msgType, pkType, pid=pid, waitReply=waitReply) })
         return netReply
 

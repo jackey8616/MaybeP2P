@@ -1,6 +1,6 @@
 import sys, threading, logging, socket, struct, traceback
 
-from protocol import Protocol
+from protocol import Protocol, ClassicV1
 
 class PeerConnection(threading.Thread):
 
@@ -19,7 +19,7 @@ class PeerConnection(threading.Thread):
             self.sd = self.sock.makefile('rw', None)
         else:
             self.sd = self.sock.makefile('rw', 0)
-        self.protocol = Protocol('ClassicV1', self, peer)
+        self.protocol = ClassicV1(self, peer)
 
     def run(self):
         protoType, msgType, msgData = self.recvData()
@@ -51,7 +51,6 @@ class PeerConnection(threading.Thread):
         try:
             protoType = self.sd.read(12).replace('\x00', '')
             msgtype = self.sd.read(4)
-            #print(msgtype)
             if not msgtype:
                 return(None, None, None)
             lenstr = self.sd.read(4)
