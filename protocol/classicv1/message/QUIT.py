@@ -4,24 +4,31 @@ from protocol.message import Message
 
 class QUIT(Message):
 
-    def __init__(self, peer, peerConn):
-        Message.__init__(self, peer, peerConn)
+    def __init__(self):
+        Message.__init__(self)
 
-    def handler(self, msgData):
+    def handler(self, peer, peerConn, msgData):
+        self.peer = peer
+        self.peerConn = peerConn
+
         try:
             self.peer.lock.acquire()
             pid = msgData
-            self.peer.removePeer(pid)
+            return self.peer.removePeer(pid)
         except Exception as e:
             self.peerConn.sendData('ERRO', e)
         finally:
             self.peer.lock.release()
+        return False
 
-    def __REQ(self, *data):
-        pass
+    def _REQ(self, *data):
+        return True
 
-    def __RES(self, *data):
-        pass
+    def _RES(self, *data):
+        return True
+
+    def _FOR(self, *data):
+        return True
 
     @staticmethod
     def packetS(pkType, peer, peerConn):

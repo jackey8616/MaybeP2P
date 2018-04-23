@@ -4,32 +4,42 @@ from protocol.message import Message
 
 class LIST(Message):
 
-    def __init__(self, peer, peerConn):
-        Message.__init__(self, peer, peerConn)
+    def __init__(self):
+        Message.__init__(self)
 
-    def handler(self, msgData):
+    def handler(self, peer, peerConn, msgData):
+        self.peer = peer
+        self.peerConn = peerConn
+
         try:
             self.peer.lock.acquire()
             if msgData.startswith('REQ'):
-                self.__REQ(())
+                return self._REQ(())
             elif msgData.startswith('RES'):
-                self.__RES((msgData[4:]))
+                return self._RES((msgData[4:]))
+            elif msgData.startswith('FOR'):
+                return self._FOR((msgData[4:]))
         except Exception as e:
             traceback.print_exc()
             self.peerConn.sendData('ERRO', e)
         finally:
             self.peer.lock.release()
+        return False
 
-    def __REQ(self, *data):
+    def _REQ(self, *data):
         message = self.peerConn.protocol.wrapper('LIST', 'RES')
         self.peerConn.sendProtocolData(message)
+        return True
 
-    def __RES(self, *data):
+    def _RES(self, *data):
         for each in data[0].split(','):
             (pid, addr, port) = each.split('|')
             if pid != self.peer.id:
                 self.peer.addPeer(pid, addr, port)
-        print(self.peer.peers)
+        return True
+
+    def _FOR(self, *data):
+        return True
 
     @staticmethod
     def packetS(pkType, peer, peerConn):

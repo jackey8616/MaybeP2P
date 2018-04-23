@@ -1,4 +1,0 @@
-
-class TestREPL:
-
-    pass

@@ -1,5 +1,5 @@
 
-from classicv1 import ClassicV1
+from protocol.classicv1 import ClassicV1
 
 names = ''
 messages = {}

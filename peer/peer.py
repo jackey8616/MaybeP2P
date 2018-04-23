@@ -59,7 +59,7 @@ class Peer(threading.Thread):
         peersInDNS = dns.resolver.query(remoteDNS, 'TXT', raise_on_no_answer=True)
         for each in peersInDNS:
             addr, port = str(each)[1:-1].split(':')
-            self.sendToPeer(addr, port, 'JOIN', 'REQ,%s,%s,%s' % (self.id, self.peerInfo.addr[0], self.peerInfo.addr[1]))
+            self.sendProtocolToPeer(addr, port, 'JOIN', 'REQ')
 
     def _syncListFromPeer(self, remoteHost):
         addr = remoteHost.split(':')[0]
@@ -80,7 +80,7 @@ class Peer(threading.Thread):
     def exit(self):
         self.stopped = True
         self.sendProtocolToNet('QUIT', 'REQ', waitReply=False)
-        self.sendProtocolToPeer(self.listenHost[0], self.listenHost[1], 'QUIT', 'REQ', waitReply=False)
+        self.sendProtocolToPeer(self.peerInfo.addr[0], self.peerInfo.addr[1], 'QUIT', 'REQ', waitReply=False)
 
     def sendProtocolToPeer(self, host, port, msgType, pkType, pid=None, waitReply=True):
         msgReply = []
@@ -98,7 +98,7 @@ class Peer(threading.Thread):
         except Exception as e:
             traceback.print_exc()
         for (protoType, msgType, msgData) in msgReply:
-            peerConn.protocol._messages[msgType].handler(msgData)
+            peerConn.protocol._messages[msgType].handler(self, peerConn, msgData)
         return msgReply
         
     def sendToPeer(self, host, port, msgType, msgData, pid=None, waitReply=True):
@@ -116,7 +116,7 @@ class Peer(threading.Thread):
         except Exception as e:
             traceback.print_exc()
         for each in msgReply:
-            peerConn.protocol._messages[each[0]].handler(each[1])
+            peerConn.protocol._messages[each[0]].handler(self, peerConn, each[1])
         return msgReply
 
     def sendProtocolToNet(self, msgType, pkType, waitReply=True):
@@ -140,7 +140,11 @@ class Peer(threading.Thread):
             return False
 
     def removePeer(self, pid):
-        self.peers.pop(pid, None)
+        try:
+            self.peers.pop(pid)
+            return True
+        except:
+            return False
 
     def getPeerByHost(self, queryHost):
         for (pid, host) in self.peers.items():

@@ -9,6 +9,7 @@ class PeerConnection(threading.Thread):
         self.stopped = False
 
         self.id = peerId
+        self.peer = peer
         if sock:
             self.sock = sock
         else:
@@ -23,7 +24,7 @@ class PeerConnection(threading.Thread):
 
     def run(self):
         protoType, msgType, msgData = self.recvData()
-        self.protocol._messages[msgType].handler(msgData)
+        self.protocol._messages[msgType].handler(self.peer, self, msgData)
         logging.debug((protoType, msgType, msgData))
         self.exit()
 

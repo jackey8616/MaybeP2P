@@ -1,44 +1,53 @@
-import sys, logging, traceback
+import logging, traceback
 
 from protocol.message import Message
-#if sys.version_info > (3, 0):
-#    from .message import Message
-#else:
-#    from message import Message
 
 class JOIN(Message):
 
-    def __init__(self, peer, peerConn):
-        Message.__init__(self, peer, peerConn)
+    def __init__(self):
+        Message.__init__(self)
 
-    def handler(self, msgData):
+    def handler(self, peer, peerConn, msgData):
+        self.peer = peer
+        self.peerConn = peerConn
+
         try:
             self.peer.lock.acquire()
             pkType, pid, addr, port = msgData.split(',')
             if pkType == 'REQ':
-                self.__REQ((pid, addr, port))
+                return self._REQ((pid, addr, port))
             elif pkType == 'RES':
-                self.__RES((pid, addr, port))
+                return self._RES((pid, addr, port))
+            elif pkType == 'FOR':
+                return self._FOR(())
         except Exception as e:
             traceback.print_exc()
             self.peerConn.sendData('ERRO', e)
         finally:
             self.peer.lock.release()
+        return False
 
-    def __REQ(self, *data):
+    def _REQ(self, *data):
         (pid, addr, port), = data
         if self.peer.addPeer(pid, addr, port):
             message = self.peerConn.protocol.wrapper('JOIN', 'RES')
             self.peerConn.sendProtocolData(message)
         else:
             self.peerConn.sendData('ERRO', 'Peer %s exists' % pid)
+            return False
+        return True
 
-    def __RES(self, *data):
+    def _RES(self, *data):
         (pid, addr, port), = data
         if self.peer.addPeer(pid, addr, port):
             logging.debug('Peer added pid {%s} at %s:%s' % (pid, addr, port))
         else:
             self.peerConn.sendData('ERRO', 'Peer %s exists' % pid)
+            return False
+        return True
+
+    def _FOR(self, *data):
+        return True
 
     @staticmethod
     def packetS(pkType, peer, peerConn):

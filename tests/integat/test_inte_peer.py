@@ -4,7 +4,7 @@ from peer import Peer
 
 class TestPeer:
 
-    #@pytest.mark.skip()
+    @pytest.mark.skip()
     def test_peer(self):
         p = Peer()
         assert p.peerInfo.addr[1] == 25565

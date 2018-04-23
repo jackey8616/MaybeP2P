@@ -16,8 +16,8 @@ class Protocol:
         self._peerConn = peerConn
         self._peer = peer
         self._messages = {
-            'REPL': REPL,
-            'TEST': TEST,
+            #'REPL': REPL,
+            #'TEST': TEST,
         }
 
         self._messageExtand()
@@ -35,7 +35,7 @@ class Protocol:
         global messages
         for (name, message) in self._messages.items():
             messages[name] = message
-            self._messages[name] = message(self._peer, self._peerConn)
+            self._messages[name] = message()
 
     @staticmethod
     def wrapperS(peer, peerConn, msgType, pkType):

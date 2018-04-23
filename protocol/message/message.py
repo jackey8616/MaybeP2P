@@ -1,17 +1,19 @@
 
 class Message:
 
-    def __init__(self, peer, peerConn):
-        self.peer = peer
-        self.peerConn = peerConn
+    def __init__(self):
+        pass
 
-    def handler(self, msgData):
+    def handler(self, peer, peerConn, msgData):
         raise NotImplementedError
 
-    def __REQ(self, *data):
+    def _REQ(self, *data):
         raise NotImplementedError
 
-    def __RES(self, *data):
+    def _RES(self, *data):
+        raise NotImplementedError
+
+    def _FOR(self, *data):
         raise NotImplementedError
 
     @staticmethod

@@ -4,7 +4,7 @@ from peer.peer import Peer
 from peer.connection import PeerConnection
 from protocol import Protocol
 from protocol.message import Message
-from protocol.message import REPL, TEST
+from protocol.classicv1.message import JOIN, LIST, QUIT
 
 @pytest.fixture(scope='module')
 def peer(request):
@@ -34,24 +34,24 @@ def protocol(peer, peerConnection):
     return p
 
 @pytest.fixture(scope='module')
-def message(peer, peerConnection):
-    m = Message(peer, peerConnection)
+def message():
+    m = Message()
     return m
 
-#@pytest.fixture(scope='module')
-#def jOIN(peer, peerConnection):
-#    joIN = JOIN(peer, peerConnection)
-#    return joIN
-#
-#@pytest.fixture(scope='module')
-#def lIST(peer, peerConnection):
-#    liST = LIST(peer, peerConnection)
-#    return liST
-#
-#@pytest.fixture(scope='module')
-#def qUIT(peer, peerConnection):
-#    quIT = QUIT(peer, peerConnection)
-#    return quIT
+@pytest.fixture(scope='module')
+def msgJOIN():
+    j = JOIN()
+    return j
+
+@pytest.fixture(scope='module')
+def msgLIST():
+    l = LIST()
+    return l
+
+@pytest.fixture(scope='module')
+def msgQUIT():
+    q = QUIT()
+    return q
 
 @pytest.fixture(scope='module')
 def rEPL(peer, peerConnection):
