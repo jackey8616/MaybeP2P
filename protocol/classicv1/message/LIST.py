@@ -27,7 +27,7 @@ class LIST(Message):
         return False
 
     def _REQ(self, *data):
-        message = self.peerConn.protocol.wrapper('LIST', 'RES')
+        message = self.peerConn.protocol['ClassicV1'].wrapper(self.peer, self.peerConn, 'LIST', 'RES')
         self.peerConn.sendProtocolData(message)
         return True
 

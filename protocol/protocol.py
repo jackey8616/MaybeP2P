@@ -1,24 +1,13 @@
 import sys, logging, json, struct
 
-if sys.version_info > (3, 0):
-    from .message import REPL, TEST
-else:
-    from message import REPL, TEST
-#,SYNC, MESG, ERRO
-
 names = '<PROTONAME>'
 messages = {}
 
 class Protocol:
 
-    def __init__(self, name, peerConn, peer):
+    def __init__(self, name):
         self._name = self._nameRegister(name if name else '<PROTONAME>')
-        self._peerConn = peerConn
-        self._peer = peer
-        self._messages = {
-            #'REPL': REPL,
-            #'TEST': TEST,
-        }
+        self._messages = {}
 
         self._messageExtand()
         self._messageRegister()
@@ -44,6 +33,6 @@ class Protocol:
         message = struct.pack('!12s4sL%ds' % msgLen, names.encode(), msgType.encode(), msgLen, msgData.encode())
         return message
 
-    def wrapper(self, msgType, pkType):
-        return Protocol.wrapperS(self._peer, self._peerConn, msgType, pkType)
+    def wrapper(self, peer, peerConn, msgType, pkType):
+        return Protocol.wrapperS(peer, peerConn, msgType, pkType)
 

@@ -30,7 +30,7 @@ class JOIN(Message):
     def _REQ(self, *data):
         (pid, addr, port), = data
         if self.peer.addPeer(pid, addr, port):
-            message = self.peerConn.protocol.wrapper('JOIN', 'RES')
+            message = self.peerConn.protocol['ClassicV1'].wrapper(self.peer, self.peerConn, 'JOIN', 'RES')
             self.peerConn.sendProtocolData(message)
         else:
             self.peerConn.sendData('ERRO', 'Peer %s exists' % pid)

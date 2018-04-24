@@ -8,8 +8,8 @@ messages = {}
 
 class ClassicV1(Protocol):
 
-    def __init__(self, peerConn, peer):
-        Protocol.__init__(self, 'ClassicV1', peerConn, peer)
+    def __init__(self):
+        Protocol.__init__(self, 'ClassicV1')
 
     def _messageExtand(self):
         extandMessages = {
@@ -18,4 +18,5 @@ class ClassicV1(Protocol):
             'QUIT': QUIT,
         }
         self._messages.update(extandMessages)
+
 

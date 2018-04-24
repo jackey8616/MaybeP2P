@@ -1,10 +1,8 @@
 import sys, threading, logging, socket, struct, traceback
 
-from protocol import Protocol, ClassicV1
-
 class PeerConnection(threading.Thread):
 
-    def __init__(self, peerId, peer, addr=None, port=None, sock=None):
+    def __init__(self, peerId, peer, protocol, addr=None, port=None, sock=None):
         threading.Thread.__init__(self)
         self.stopped = False
 
@@ -20,11 +18,11 @@ class PeerConnection(threading.Thread):
             self.sd = self.sock.makefile('rw', None)
         else:
             self.sd = self.sock.makefile('rw', 0)
-        self.protocol = ClassicV1(self, peer)
+        self.protocol = protocol
 
     def run(self):
         protoType, msgType, msgData = self.recvData()
-        self.protocol._messages[msgType].handler(self.peer, self, msgData)
+        self.protocol[protoType]._messages[msgType].handler(self.peer, self, msgData)
         logging.debug((protoType, msgType, msgData))
         self.exit()
 
@@ -36,12 +34,10 @@ class PeerConnection(threading.Thread):
             return False
         return True
 
+    # Need further rewrite, right now only sendProtocolData method work.
     def sendData(self, msgType, msgData):
         try:
             message = self.protocol.wrapper(msgType)
-        #    msgLen = len(msgData)
-        #    message = struct.pack('!4sL%ds' % msgLen, msgType.encode(), msgLen, msgData.encode())
-        #    message = self.protocol.encoder(msgType, msgData)
             self.sd.write(message.decode())
             self.sd.flush()
         except:
