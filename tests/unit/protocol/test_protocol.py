@@ -1,4 +1,9 @@
 import pytest
 
+from protocol.protocol import Protocol
+
 class TestProtocol:
-    pass
+
+    def test__messageExtand(self):
+        with pytest.raises(NotImplementedError):
+            Protocol('test')

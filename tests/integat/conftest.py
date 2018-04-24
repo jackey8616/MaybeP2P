@@ -4,7 +4,7 @@ from peer.peer import Peer
 from peer.connection import PeerConnection
 from protocol import Protocol
 from protocol.message import Message
-from protocol.message import REPL, TEST
+from protocol.message import REPL
 
 @pytest.fixture(scope='module')
 def peer(request):
@@ -57,9 +57,4 @@ def message(peer, peerConnection):
 def rEPL(peer, peerConnection):
     rePL = REPL(peer, peerConnection)
     return rePL
-
-@pytest.fixture(scope='module')
-def tEST(peer, peerConnection):
-    teST = TEST(peer, peerConnection)
-    return teST
 

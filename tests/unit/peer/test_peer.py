@@ -11,8 +11,12 @@ class TestPeerInfo:
 
 class TestPeer:
 
+    def test__initServerHost(self, peer):
+        assert peer._initServerHost() == peer.peerInfo.addr[0]
+
     def test__initServerSock(self, peer):
-        pass
+        peer.listenHost = (None, None)
+        assert peer._initServerSock() == False
 
     def test__joinNetFromPeer(self, peer):
         pass
@@ -33,10 +37,17 @@ class TestPeer:
         pass
 
     def test_addPeer(self, peer):
+        peer.peers = {}
         assert peer.addPeer('000', '111', '222') == True
         assert peer.addPeer('000', '444', '555') == False
 
+    def test_removePeer(self, peer):
+        peer.peers = {'123': ('456', 789)}
+        assert peer.removePeer('123') == True
+        assert peer.removePeer('123') == False
+
     def test_getPeerByHost(self, peer):
+        peer.peers = {'000': ('111', 222)}
         assert peer.getPeerByHost(('111', 222)) == '000'
         assert peer.getPeerByHost(('444', 555)) == None
 
