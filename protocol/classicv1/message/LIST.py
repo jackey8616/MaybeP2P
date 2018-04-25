@@ -41,14 +41,10 @@ class LIST(Message):
     def _FOR(self, *data):
         return True
 
-    @staticmethod
-    def packS(pkType, peer, peerConn):
+    def pack(self, pkType, peerConn):
         data = pkType
         if pkType == 'RES':
             for (pid, host) in peerConn.peer.peers.items():
                 data += ',%s|%s|%s' % (pid, host[0], host[1])
         return len(data), data
-
-    def pack(self, pkType, peerConn):
-        return LIST.packS(pkType, self.peer, peerConn)
 

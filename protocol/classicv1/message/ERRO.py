@@ -20,8 +20,9 @@ class ERRO(Message):
         pass
 
     @staticmethod
-    def packetS(pkType, peer, peerConn):
+    def packS(pkType, peer, peerConn):
         pass
 
-    def packet(self, pkType, peer, peerConn):
-        return ERRO.packetS(pkType, peer, peerConn)
+    def pack(self, pkType, peerConn):
+        return ERRO.packetS(pkType, peerConn.peer, peerConn)
+

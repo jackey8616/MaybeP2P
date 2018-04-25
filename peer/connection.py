@@ -21,10 +21,13 @@ class PeerConnection(threading.Thread):
         self.protocol = protocol
 
     def run(self):
-        protoType, msgType, msgData = self.recvData()
-        self.protocol[protoType]._messages[msgType].handler(self, msgData)
-        logging.debug((protoType, msgType, msgData))
-        self.exit()
+        try:
+            protoType, msgType, msgData = self.recvData()
+            self.protocol[protoType]._messages[msgType].handler(self, msgData)
+            logging.debug((protoType, msgType, msgData))
+            self.exit()
+        except Exception as e:
+            traceback.print_exc()
 
     def sendProtocolData(self, msg):
         try:

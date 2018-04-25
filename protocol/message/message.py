@@ -17,7 +17,7 @@ class Message:
         raise NotImplementedError
 
     @staticmethod
-    def packS(pkType, peer, peerConn):
+    def packS(pkType, peerConn):
         raise NotImplementedError
 
     def pack(self, pkType, peerConn):

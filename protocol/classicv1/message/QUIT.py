@@ -30,11 +30,7 @@ class QUIT(Message):
     def _FOR(self, *data):
         return True
 
-    @staticmethod
-    def packS(pkType, peer, peerConn):
+    def pack(self, pkType, peerConn):
         data = peerConn.peer.id
         return len(data), data
-
-    def pack(self, pkType, peerConn):
-        return QUIT.packS(pkType, self.peer, peerConn)
 

@@ -49,11 +49,7 @@ class JOIN(Message):
     def _FOR(self, *data):
         return True
 
-    @staticmethod
-    def packS(pkType, peer, peerConn):
+    def pack(self, pkType, peerConn):
         data = '%s,%s,%s,%s' % (pkType, peerConn.peer.id, peerConn.peer.peerInfo.addr[0], peerConn.peer.peerInfo.addr[1])
         return len(data), data
-
-    def pack(self, pkType, peerConn):
-        return JOIN.packS(pkType, self.peer, peerConn)
 

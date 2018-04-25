@@ -22,7 +22,7 @@ class TestMessage:
     
     def test_packS(self):
         with pytest.raises(NotImplementedError):
-            Message.packS(None, None, None) 
+            Message.packS(None, None) 
 
     def test_pack(self, message):
         with pytest.raises(NotImplementedError):

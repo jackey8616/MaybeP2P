@@ -1,4 +1,4 @@
-import sys, logging, json, struct
+import sys, logging, json, struct, traceback
 
 names = '<PROTONAME>'
 messages = {}
@@ -28,13 +28,12 @@ class Protocol:
             setattr(self, name, message(self))
             self._messages[name] = getattr(self, name)
 
-    @staticmethod
-    def wrapperS(peer, peerConn, msgType, pkType):
-        global names, messages
-        msgLen, msgData = messages[msgType].packS(pkType, peer, peerConn)
-        message = struct.pack('!12s4sL%ds' % msgLen, names.encode(), msgType.encode(), msgLen, msgData.encode())
-        return message
-
     def wrapper(self, peerConn, msgType, pkType):
-        return Protocol.wrapperS(self._peer, peerConn, msgType, pkType)
+        try:
+            msgLen, msgData = getattr(self, msgType).pack(pkType, peerConn)
+            message = struct.pack('!12s4sL%ds' % msgLen, names.encode(), msgType.encode(), msgLen, msgData.encode())
+            return message
+        except Exception as e:
+            traceback.print_exc()
+            return None
 
