@@ -1,4 +1,4 @@
-import sys, logging, socket, threading, traceback
+import sys, logging, socket, threading, traceback, copy
 import dns.resolver
 from uuid import uuid4
 
@@ -140,7 +140,7 @@ class Peer(threading.Thread):
 
     def sendToNet(self, msgType, msgData, waitReply=True):
         netReply = []
-        for (pid, host) in self.peers.items():
+        for (pid, host) in copy.deepcopy(self.peers.items()):
             netReply.append({ pid: self.sendToPeer(host[0], host[1], msgType, msgData, pid=pid, waitReply=waitReply) })
         return netReply
 
