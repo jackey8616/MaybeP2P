@@ -1,4 +1,5 @@
 import sys
+import dns.resolver
 
 from protocol import Protocol
 from protocol.classicv1.message import JOIN, LIST, QUIT
@@ -19,8 +20,22 @@ class ClassicV1(Protocol):
         }
         self._messages.update(extandMessages)
 
-    #def _joinNetFromPeer(self, peer, remotePeerAddr):
-    #    addr = remotePeerAddr.split(':')[0]
-    #    port = int(remotePeerAddr.split(':')[1])
-    #    peer.sendProtocolToPeer(addr, port, 'ClassicV1', 'JOIN', 'REQ')
+    def _joinNetFromPeer(self, remotePeerAddr):
+        addr = remotePeerAddr.split(':')[0]
+        port = int(remotePeerAddr.split(':')[1])
+        message = self.JOIN.packWrap('REQ')
+        self._peer.sendToPeer(addr, port, message)
+
+    def _joinNetFromDNS(self, remoteDNS):
+        peersInDNS = dns.resolver.query(remoteDNS, 'TXT', raise_on_no_answer=True)
+        for each in peersInDNS:
+            addr, port = str(each)[1:-1].split(':')
+            message = self.JOIN.packWrap('REQ')
+            self._peer.sendToPeer(addr, port, message)
+
+    def _syncListFromPeer(self, remoteHost):
+        addr = remoteHost.split(':')[0]
+        port = int(remoteHost.split(':')[1])
+        message = self.LIST.packWrap('REQ')
+        self._peer.sendToPeer(addr, port, message)
 

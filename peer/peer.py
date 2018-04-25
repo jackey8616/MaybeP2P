@@ -1,5 +1,4 @@
 import sys, logging, socket, threading, traceback, copy
-import dns.resolver
 from uuid import uuid4
 
 from protocol.classicv1 import ClassicV1
@@ -61,25 +60,6 @@ class Peer(threading.Thread):
         return {
             'ClassicV1': self.ClassicV1
         }
-
-    def _joinNetFromPeer(self, remotePeerAddr):
-        addr = remotePeerAddr.split(':')[0]
-        port = int(remotePeerAddr.split(':')[1])
-        message = self.ClassicV1.JOIN.packWrap('REQ')
-        self.sendToPeer(addr, port, message)
-
-    def _joinNetFromDNS(self, remoteDNS):
-        peersInDNS = dns.resolver.query(remoteDNS, 'TXT', raise_on_no_answer=True)
-        for each in peersInDNS:
-            addr, port = str(each)[1:-1].split(':')
-            message = self.ClassicV1.JOIN.packWrap('REQ')
-            self.sendToPeer(addr, port, message)
-
-    def _syncListFromPeer(self, remoteHost):
-        addr = remoteHost.split(':')[0]
-        port = int(remoteHost.split(':')[1])
-        message = self.ClassicV1.LIST.packWrap('REQ')
-        self.sendToPeer(addr, port, message)
 
     def run(self):
         while not self.stopped:

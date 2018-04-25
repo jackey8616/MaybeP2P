@@ -28,10 +28,10 @@ def main(argv):
     peer._initServerSock()
     peer.start()
     if syncAddr:
-        peer._joinNetFromPeer(syncAddr)
-        peer._syncListFromPeer(syncAddr)
+        peer.ClassicV1._joinNetFromPeer(syncAddr)
+        peer.ClassicV1._syncListFromPeer(syncAddr)
     elif syncDNS:
-        peer._joinNetFromDNS(syncDNS)
+        peer.ClassicV1._joinNetFromDNS(syncDNS)
     else:
         logging.debug('You have to manual give a peer\'s ip or DNS domain for sync.')
         logging.debug('Or peer would not sync to any net.')
