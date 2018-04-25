@@ -4,25 +4,21 @@ from protocol.message import Message
 
 class ERRO(Message):
 
-    def __init__(self, protoName):
-        Message.__init__(self, protoName)
+    def __init__(self, protocol):
+        Message.__init__(self, protocol)
 
-    def handler(self, peer, peerConn, msgData):
-        pass
+    def handler(self, peerConn, msgData):
+        return True
 
     def _REQ(self, *data):
-        pass
+        return True
 
     def _RES(self, *data):
-        pass
+        return True
 
     def _FOR(self, *data):
-        pass
+        return True
 
-    @staticmethod
-    def packS(pkType, peer, peerConn):
-        pass
-
-    def pack(self, pkType, peerConn):
-        return ERRO.packetS(pkType, peerConn.peer, peerConn)
+    def pack(self, pkType):
+        return (len('ERRO'), 'ERRO')
 

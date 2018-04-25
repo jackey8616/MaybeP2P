@@ -4,7 +4,7 @@ class TestQUIT:
     def test_handler(self, peerConnection, msgQUIT):
         assert msgQUIT.handler(peerConnection, None) == False
         # This statement processed not enough data to raise Exceptions.
-        #assert msgQUIT.handler(peer, peerConnection, len()) == False
+        #assert msgQUIT.handler(None, None) == False
 
     def test__REQ(self, peerConnection, msgQUIT):
         assert msgQUIT._REQ(None) == True

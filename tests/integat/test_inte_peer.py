@@ -4,7 +4,7 @@ from peer import Peer
 
 class TestPeer:
 
-    @pytest.mark.skip()
+#    @pytest.mark.skip()
     def test_peer(self):
         p = Peer()
         assert p.peerInfo.addr[1] == 25565
@@ -17,8 +17,8 @@ class TestPeer:
         p2._initServerSock()
         p2.start()
 
-        p2._joinNetFromPeer('0.0.0.0:25565')
-        p2._syncListFromPeer('0.0.0.0:25565')
+        p2.ClassicV1._joinNetFromPeer('0.0.0.0:25565')
+        p2.ClassicV1._syncListFromPeer('0.0.0.0:25565')
 
         p.exit()
         p2.exit()

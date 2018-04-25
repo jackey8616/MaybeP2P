@@ -4,9 +4,6 @@ import dns.resolver
 from protocol import Protocol
 from protocol.classicv1.message import JOIN, LIST, QUIT
 
-names = ''
-messages = {}
-
 class ClassicV1(Protocol):
 
     def __init__(self, peer):

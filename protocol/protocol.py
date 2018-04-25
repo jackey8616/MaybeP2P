@@ -11,7 +11,11 @@ class Protocol:
         self._messageRegister()
 
     def _messageExtand(self):
-        raise NotImplementedError
+        extandMessages = {
+            # Put messages in here for protocol extand.
+        }
+        self._messages.update(extandMessages)
+        return True
 
     def _messageRegister(self):
         for (name, message) in self._messages.items():
