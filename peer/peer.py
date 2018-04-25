@@ -65,18 +65,21 @@ class Peer(threading.Thread):
     def _joinNetFromPeer(self, remotePeerAddr):
         addr = remotePeerAddr.split(':')[0]
         port = int(remotePeerAddr.split(':')[1])
-        self.sendProtocolToPeer(addr, port, 'ClassicV1', 'JOIN', 'REQ')
+        message = self.ClassicV1.JOIN.packWrap('REQ')
+        self.sendToPeer(addr, port, message)
 
     def _joinNetFromDNS(self, remoteDNS):
         peersInDNS = dns.resolver.query(remoteDNS, 'TXT', raise_on_no_answer=True)
         for each in peersInDNS:
             addr, port = str(each)[1:-1].split(':')
-            self.sendProtocolToPeer(addr, port, 'ClassicV1', 'JOIN', 'REQ')
+            message = self.ClassicV1.JOIN.packWrap('REQ')
+            self.sendToPeer(addr, port, message)
 
     def _syncListFromPeer(self, remoteHost):
         addr = remoteHost.split(':')[0]
         port = int(remoteHost.split(':')[1])
-        self.sendProtocolToPeer(addr, port, 'ClassicV1', 'LIST', 'REQ')
+        message = self.ClassicV1.LIST.packWrap('REQ')
+        self.sendToPeer(addr, port, message)
 
     def run(self):
         while not self.stopped:
@@ -91,8 +94,9 @@ class Peer(threading.Thread):
 
     def exit(self):
         self.stopped = True
-        self.sendProtocolToNet('ClassicV1', 'QUIT', 'REQ', waitReply=False)
-        self.sendProtocolToPeer(self.peerInfo.addr[0], self.peerInfo.addr[1], 'ClassicV1', 'QUIT', 'REQ', waitReply=False)
+        message = self.ClassicV1.QUIT.packWrap('REQ')
+        self.sendToNet(message, waitReply=False)
+        self.sendToPeer(self.peerInfo.addr[0], self.peerInfo.addr[1], message, waitReply=False)
 
     def sendProtocolToPeer(self, host, port, protoType, msgType, pkType, pid=None, waitReply=True):
         msgReply = []
@@ -113,11 +117,11 @@ class Peer(threading.Thread):
             peerConn.protocol[protoType]._messages[msgType].handler(peerConn, msgData)
         return msgReply
         
-    def sendToPeer(self, host, port, msgType, msgData, pid=None, waitReply=True):
+    def sendToPeer(self, host, port, message, pid=None, waitReply=True):
         msgReply = []
         try:
             peerConn = PeerConnection(pid, self, self.protocol, host, port)
-            peerConn.sendData(msgType, msgData)
+            peerConn.sendData(message)
         
             if waitReply:
                 oneReply = peerConn.recvData()
@@ -127,21 +131,20 @@ class Peer(threading.Thread):
             peerConn.exit()
         except Exception as e:
             traceback.print_exc()
-        for each in msgReply:
-            peerConn.protocol._messages[each[0]].handler(peerConn, each[1])
+        for (protoType, msgType, msgData) in msgReply:
+            peerConn.protocol[protoType]._messages[msgType].handler(peerConn, msgData)
         return msgReply
 
     def sendProtocolToNet(self, protoType, msgType, pkType, waitReply=True):
         netReply = []
         for (pid, host) in self.peers.items():
-            print(pid, host)
             netReply.append({ pid: self.sendProtocolToPeer(host[0], host[1], protoType, msgType, pkType, pid=pid, waitReply=waitReply) })
         return netReply
 
-    def sendToNet(self, msgType, msgData, waitReply=True):
+    def sendToNet(self, message, waitReply=True):
         netReply = []
-        for (pid, host) in copy.deepcopy(self.peers.items()):
-            netReply.append({ pid: self.sendToPeer(host[0], host[1], msgType, msgData, pid=pid, waitReply=waitReply) })
+        for (pid, host) in self.peers.items():
+            netReply.append({ pid: self.sendToPeer(host[0], host[1], message, pid=pid, waitReply=waitReply) })
         return netReply
 
     def addPeer(self, pid, addr, port):

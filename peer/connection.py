@@ -29,15 +29,6 @@ class PeerConnection(threading.Thread):
         except Exception as e:
             traceback.print_exc()
 
-    def sendProtocolData(self, msg):
-        try:
-            self.sd.write(msg.decode())
-            self.sd.flush()
-        except:
-            return False
-        return True
-
-    # Need further rewrite, right now only sendProtocolData method work.
     def sendData(self, message):
         try:
             self.sd.write(message.decode())

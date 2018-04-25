@@ -27,8 +27,8 @@ class LIST(Message):
         return False
 
     def _REQ(self, *data):
-        message = self.protocol.LIST.pack('RES')
-        self.peerConn.sendProtocolData(message)
+        message = self.protocol.LIST.packWrap('RES')
+        self.peerConn.sendData(message)
         return True
 
     def _RES(self, *data):

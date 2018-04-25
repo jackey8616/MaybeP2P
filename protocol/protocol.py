@@ -28,9 +28,9 @@ class Protocol:
             setattr(self, name, message(self))
             self._messages[name] = getattr(self, name)
 
-#    def _wrap(self, peerConn, *msg):
-#        msgLen, msgType, msgData = msg
-#        return struct.pack('!12s4sL%ds' % msgLen, names.encode(), msgType.encode(), msgLen, msgData.encode())
+    def _wrap(self, *msg):
+        (msgLen, msgType, msgData), = msg
+        return struct.pack('!12s4sL%ds' % msgLen, names.encode(), msgType.encode(), msgLen, msgData.encode())
 
     def wrapper(self, peerConn, msgType, pkType):
         try:

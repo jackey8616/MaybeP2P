@@ -18,3 +18,8 @@ class Message:
 
     def pack(self, pkType):
         raise NotImplementedError
+
+    def packWrap(self, pkType):
+        dataLen, data = self.pack(pkType)
+        return self.protocol._wrap((dataLen, self.__class__.__name__, data))
+
