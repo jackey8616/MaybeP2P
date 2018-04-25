@@ -38,9 +38,8 @@ class PeerConnection(threading.Thread):
         return True
 
     # Need further rewrite, right now only sendProtocolData method work.
-    def sendData(self, msgType, msgData):
+    def sendData(self, message):
         try:
-            message = self.protocol.wrapper(msgType)
             self.sd.write(message.decode())
             self.sd.flush()
         except:

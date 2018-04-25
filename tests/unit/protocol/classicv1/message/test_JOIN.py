@@ -29,7 +29,7 @@ class TestJOIN:
     def test__FOR(self, peer, peerConnection, msgJOIN):
         assert msgJOIN._FOR((None,None,None)) == True
 
-    def test_pack(self, peerConnection, msgJOIN):
+    def test_pack(self, msgJOIN):
         data = '%s,%s,%s,%s' % ('RES', msgJOIN.peer.id, msgJOIN.peer.peerInfo.addr[0], msgJOIN.peer.peerInfo.addr[1])
-        assert msgJOIN.pack('RES', peerConnection) == (len(data), data)
+        assert msgJOIN.pack('RES') == (len(data), data)
 

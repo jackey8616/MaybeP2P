@@ -15,6 +15,6 @@ class TestQUIT:
     def test__FOR(self, peerConnection, msgQUIT):
         assert msgQUIT._FOR(None) == True
 
-    def test_pack(self, peerConnection, msgQUIT):
-        assert msgQUIT.pack('RES', peerConnection) == (len(msgQUIT.peerConn.peer.id), msgQUIT.peerConn.peer.id)
+    def test_pack(self, msgQUIT):
+        assert msgQUIT.pack('RES') == (len(msgQUIT.protocol._peer.id), msgQUIT.protocol._peer.id)
 

@@ -22,7 +22,7 @@ class JOIN(Message):
                 return self._FOR(())
         except Exception as e:
             traceback.print_exc()
-            self.peerConn.sendData('ERRO', e)
+            self.peerConn.sendData(e)
         finally:
             self.peer.lock.release()
         return False
@@ -30,10 +30,10 @@ class JOIN(Message):
     def _REQ(self, *data):
         (pid, addr, port), = data
         if self.peer.addPeer(pid, addr, port):
-            message = self.peerConn.protocol[self.protocol._name].wrapper(self.peerConn, 'JOIN', 'RES')
+            message = self.protocol.JOIN.pack('RES')
             self.peerConn.sendProtocolData(message)
         else:
-            self.peerConn.sendData('ERRO', 'Peer %s exists' % pid)
+            #self.peerConn.sendData('Peer %s exists' % pid)
             return False
         return True
 
@@ -42,14 +42,14 @@ class JOIN(Message):
         if self.peer.addPeer(pid, addr, port):
             logging.debug('Peer added pid {%s} at %s:%s' % (pid, addr, port))
         else:
-            self.peerConn.sendData('ERRO', 'Peer %s exists' % pid)
+            #self.peerConn.sendData('Peer %s exists' % pid)
             return False
         return True
 
     def _FOR(self, *data):
         return True
 
-    def pack(self, pkType, peerConn):
-        data = '%s,%s,%s,%s' % (pkType, peerConn.peer.id, peerConn.peer.peerInfo.addr[0], peerConn.peer.peerInfo.addr[1])
+    def pack(self, pkType):
+        data = '%s,%s,%s,%s' % (pkType, self.protocol._peer.id, self.protocol._peer.peerInfo.addr[0], self.protocol._peer.peerInfo.addr[1])
         return len(data), data
 

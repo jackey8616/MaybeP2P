@@ -16,9 +16,5 @@ class Message:
     def _FOR(self, *data):
         raise NotImplementedError
 
-    @staticmethod
-    def packS(pkType, peerConn):
-        raise NotImplementedError
-
-    def pack(self, pkType, peerConn):
+    def pack(self, pkType):
         raise NotImplementedError

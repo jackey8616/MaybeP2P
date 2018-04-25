@@ -24,10 +24,10 @@ class TestLIST:
     def test__FOR(self, peerConnection, msgLIST):
         assert msgLIST._FOR(('FOR')) == True
 
-    def test_pack(self, peerConnection, msgLIST):
-        msgLIST.peerConn.peer.peers = {
+    def test_pack(self, msgLIST):
+        msgLIST.protocol._peer.peers = {
             '123': ('456', 789)
         }
         data = 'RES,123|456|789'
-        assert msgLIST.pack('RES', peerConnection) == (len(data), data)
+        assert msgLIST.pack('RES') == (len(data), data)
 

@@ -27,7 +27,7 @@ class LIST(Message):
         return False
 
     def _REQ(self, *data):
-        message = self.peerConn.protocol[self.protocol._name].wrapper(self.peerConn, 'LIST', 'RES')
+        message = self.protocol.LIST.pack('RES')
         self.peerConn.sendProtocolData(message)
         return True
 
@@ -41,10 +41,10 @@ class LIST(Message):
     def _FOR(self, *data):
         return True
 
-    def pack(self, pkType, peerConn):
+    def pack(self, pkType):
         data = pkType
         if pkType == 'RES':
-            for (pid, host) in peerConn.peer.peers.items():
+            for (pid, host) in self.protocol._peer.peers.items():
                 data += ',%s|%s|%s' % (pid, host[0], host[1])
         return len(data), data
 

@@ -20,10 +20,6 @@ class TestMessage:
         with pytest.raises(NotImplementedError):
             message._FOR()
     
-    def test_packS(self):
-        with pytest.raises(NotImplementedError):
-            Message.packS(None, None) 
-
     def test_pack(self, message):
         with pytest.raises(NotImplementedError):
-            message.pack(None, None)
+            message.pack(None)
