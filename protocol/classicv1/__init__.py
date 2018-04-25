@@ -8,8 +8,8 @@ messages = {}
 
 class ClassicV1(Protocol):
 
-    def __init__(self):
-        Protocol.__init__(self, 'ClassicV1')
+    def __init__(self, peer):
+        Protocol.__init__(self, 'ClassicV1', peer)
 
     def _messageExtand(self):
         extandMessages = {
@@ -19,4 +19,8 @@ class ClassicV1(Protocol):
         }
         self._messages.update(extandMessages)
 
+    #def _joinNetFromPeer(self, peer, remotePeerAddr):
+    #    addr = remotePeerAddr.split(':')[0]
+    #    port = int(remotePeerAddr.split(':')[1])
+    #    peer.sendProtocolToPeer(addr, port, 'ClassicV1', 'JOIN', 'REQ')
 

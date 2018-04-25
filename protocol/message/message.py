@@ -1,10 +1,10 @@
 
 class Message:
 
-    def __init__(self):
-        pass
+    def __init__(self, protocol):
+        self.protocol = protocol
 
-    def handler(self, peer, peerConn, msgData):
+    def handler(self, peerConn, msgData):
         raise NotImplementedError
 
     def _REQ(self, *data):
@@ -17,8 +17,8 @@ class Message:
         raise NotImplementedError
 
     @staticmethod
-    def wrapperS():
+    def packS(pkType, peer, peerConn):
         raise NotImplementedError
 
-    def wrapper(self):
+    def pack(self, pkType, peerConn):
         raise NotImplementedError

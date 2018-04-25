@@ -4,12 +4,12 @@ from protocol.message import Message
 
 class QUIT(Message):
 
-    def __init__(self):
-        Message.__init__(self)
+    def __init__(self, protocol):
+        Message.__init__(self, protocol)
 
-    def handler(self, peer, peerConn, msgData):
-        self.peer = peer
+    def handler(self, peerConn, msgData):
         self.peerConn = peerConn
+        self.peer = peerConn.peer
 
         try:
             self.peer.lock.acquire()
@@ -31,10 +31,10 @@ class QUIT(Message):
         return True
 
     @staticmethod
-    def packetS(pkType, peer, peerConn):
-        data = peer.id
+    def packS(pkType, peer, peerConn):
+        data = peerConn.peer.id
         return len(data), data
 
-    def packet(self, pkType, peer, peerConn):
-        return QUIT.packetS(pkType, peer, peerConn)
+    def pack(self, pkType, peerConn):
+        return QUIT.packS(pkType, self.peer, peerConn)
 

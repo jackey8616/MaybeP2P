@@ -4,12 +4,12 @@ from protocol.message import Message
 
 class JOIN(Message):
 
-    def __init__(self):
-        Message.__init__(self)
+    def __init__(self, protocol):
+        Message.__init__(self, protocol)
 
-    def handler(self, peer, peerConn, msgData):
-        self.peer = peer
+    def handler(self, peerConn, msgData):
         self.peerConn = peerConn
+        self.peer = peerConn.peer
 
         try:
             self.peer.lock.acquire()
@@ -30,7 +30,7 @@ class JOIN(Message):
     def _REQ(self, *data):
         (pid, addr, port), = data
         if self.peer.addPeer(pid, addr, port):
-            message = self.peerConn.protocol['ClassicV1'].wrapper(self.peer, self.peerConn, 'JOIN', 'RES')
+            message = self.peerConn.protocol[self.protocol._name].wrapper(self.peerConn, 'JOIN', 'RES')
             self.peerConn.sendProtocolData(message)
         else:
             self.peerConn.sendData('ERRO', 'Peer %s exists' % pid)
@@ -50,10 +50,10 @@ class JOIN(Message):
         return True
 
     @staticmethod
-    def packetS(pkType, peer, peerConn):
-        data = '%s,%s,%s,%s' % (pkType, peer.id, peer.peerInfo.addr[0], peer.peerInfo.addr[1])
+    def packS(pkType, peer, peerConn):
+        data = '%s,%s,%s,%s' % (pkType, peerConn.peer.id, peerConn.peer.peerInfo.addr[0], peerConn.peer.peerInfo.addr[1])
         return len(data), data
 
-    def packet(self, pkType, peer, peerConn):
-        return JOIN.packetS(pkType, peer, peerConn)
+    def pack(self, pkType, peerConn):
+        return JOIN.packS(pkType, self.peer, peerConn)
 

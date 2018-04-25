@@ -5,6 +5,7 @@ from peer.connection import PeerConnection
 from protocol import Protocol
 from protocol.message import Message
 from protocol.message import REPL
+from protocol.classicv1 import ClassicV1
 from protocol.classicv1.message import JOIN, LIST, QUIT
 
 @pytest.fixture(scope='module')
@@ -30,32 +31,37 @@ def peerConnection(request, peer):
     return peerConn
 
 @pytest.fixture(scope='module')
-def protocol():
-    p = Protocol('name')
+def protocol(peer):
+    p = Protocol('name', peer)
     return p
 
 @pytest.fixture(scope='module')
+def classicv1(peer):
+    c = ClassicV1(peer)
+    return c
+
+@pytest.fixture(scope='module')
 def message():
-    m = Message()
+    m = Message('TestProtocol')
     return m
 
 @pytest.fixture(scope='module')
-def msgJOIN():
-    j = JOIN()
+def msgJOIN(classicv1):
+    j = JOIN(classicv1)
     return j
 
 @pytest.fixture(scope='module')
-def msgLIST():
-    l = LIST()
+def msgLIST(classicv1):
+    l = LIST(classicv1)
     return l
 
 @pytest.fixture(scope='module')
-def msgQUIT():
-    q = QUIT()
+def msgQUIT(classicv1):
+    q = QUIT(classicv1)
     return q
 
 @pytest.fixture(scope='module')
 def msgREPL():
-    r = REPL()
+    r = REPL('TestProtocol')
     return r
 

@@ -6,4 +6,4 @@ class TestProtocol:
 
     def test__messageExtand(self):
         with pytest.raises(NotImplementedError):
-            Protocol('test')
+            Protocol('test', None)

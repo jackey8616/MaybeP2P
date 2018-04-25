@@ -5,8 +5,9 @@ messages = {}
 
 class Protocol:
 
-    def __init__(self, name):
+    def __init__(self, name, peer):
         self._name = self._nameRegister(name if name else '<PROTONAME>')
+        self._peer = peer
         self._messages = {}
 
         self._messageExtand()
@@ -24,15 +25,16 @@ class Protocol:
         global messages
         for (name, message) in self._messages.items():
             messages[name] = message
-            self._messages[name] = message()
+            setattr(self, name, message(self))
+            self._messages[name] = getattr(self, name)
 
     @staticmethod
     def wrapperS(peer, peerConn, msgType, pkType):
         global names, messages
-        msgLen, msgData = messages[msgType].packetS(pkType, peer, peerConn)
+        msgLen, msgData = messages[msgType].packS(pkType, peer, peerConn)
         message = struct.pack('!12s4sL%ds' % msgLen, names.encode(), msgType.encode(), msgLen, msgData.encode())
         return message
 
-    def wrapper(self, peer, peerConn, msgType, pkType):
-        return Protocol.wrapperS(peer, peerConn, msgType, pkType)
+    def wrapper(self, peerConn, msgType, pkType):
+        return Protocol.wrapperS(self._peer, peerConn, msgType, pkType)
 

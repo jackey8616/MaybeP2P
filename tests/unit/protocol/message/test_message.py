@@ -6,7 +6,7 @@ class TestMessage:
 
     def test_handler(self, message):
         with pytest.raises(NotImplementedError):
-            message.handler(None, None, None)
+            message.handler(None, None)
 
     def test__REQ(self, message):
         with pytest.raises(NotImplementedError):
@@ -20,10 +20,10 @@ class TestMessage:
         with pytest.raises(NotImplementedError):
             message._FOR()
     
-    def test_wrapperS(self):
+    def test_packS(self):
         with pytest.raises(NotImplementedError):
-            Message.wrapperS() 
+            Message.packS(None, None, None) 
 
-    def test_wrapper(self, message):
+    def test_pack(self, message):
         with pytest.raises(NotImplementedError):
-            message.wrapper()
+            message.pack(None, None)

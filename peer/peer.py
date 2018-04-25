@@ -57,8 +57,9 @@ class Peer(threading.Thread):
         return True
 
     def _initPeerProtocol(self):
+        setattr(self, 'ClassicV1', ClassicV1(self))
         return {
-            'ClassicV1': ClassicV1()
+            'ClassicV1': self.ClassicV1
         }
 
     def _joinNetFromPeer(self, remotePeerAddr):
@@ -97,7 +98,7 @@ class Peer(threading.Thread):
         msgReply = []
         try:
             peerConn = PeerConnection(pid, self, self.protocol, host, port)
-            message = self.protocol[protoType].wrapper(self, peerConn, msgType, pkType)
+            message = self.protocol[protoType].wrapper(peerConn, msgType, pkType)
             peerConn.sendProtocolData(message)
         
             if waitReply:
@@ -109,7 +110,7 @@ class Peer(threading.Thread):
         except Exception as e:
             traceback.print_exc()
         for (protoType, msgType, msgData) in msgReply:
-            peerConn.protocol[protoType]._messages[msgType].handler(self, peerConn, msgData)
+            peerConn.protocol[protoType]._messages[msgType].handler(peerConn, msgData)
         return msgReply
         
     def sendToPeer(self, host, port, msgType, msgData, pid=None, waitReply=True):
@@ -127,7 +128,7 @@ class Peer(threading.Thread):
         except Exception as e:
             traceback.print_exc()
         for each in msgReply:
-            peerConn.protocol._messages[each[0]].handler(self, peerConn, each[1])
+            peerConn.protocol._messages[each[0]].handler(peerConn, each[1])
         return msgReply
 
     def sendProtocolToNet(self, protoType, msgType, pkType, waitReply=True):

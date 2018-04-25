@@ -22,7 +22,7 @@ class PeerConnection(threading.Thread):
 
     def run(self):
         protoType, msgType, msgData = self.recvData()
-        self.protocol[protoType]._messages[msgType].handler(self.peer, self, msgData)
+        self.protocol[protoType]._messages[msgType].handler(self, msgData)
         logging.debug((protoType, msgType, msgData))
         self.exit()
 

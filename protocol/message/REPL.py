@@ -4,8 +4,8 @@ from protocol.message import Message
 
 class REPL(Message):
 
-    def __init__(self):
-        Message.__init__(self)
+    def __init__(self, protoName):
+        Message.__init__(self, protoName)
 
     def handler(self, peer, peerConn, msgData):
         self.peer = peer
