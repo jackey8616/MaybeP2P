@@ -35,7 +35,7 @@ class LIST(Message):
         for each in data[0].split(','):
             (pid, addr, port) = each.split('|')
             if pid != self.peer.id:
-                self.peer.addPeer(pid, addr, port)
+                self.protocol.addPeer(pid, addr, port)
         return True
 
     def _FOR(self, *data):
@@ -44,7 +44,7 @@ class LIST(Message):
     def pack(self, pkType):
         data = pkType
         if pkType == 'RES':
-            for (pid, host) in self.protocol._peer.peers.items():
+            for (pid, host) in self.protocol._peers.items():
                 data += ',%s|%s|%s' % (pid, host[0], host[1])
         return len(data), data
 

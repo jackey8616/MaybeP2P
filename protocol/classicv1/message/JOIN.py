@@ -29,7 +29,7 @@ class JOIN(Message):
 
     def _REQ(self, *data):
         (pid, addr, port), = data
-        if self.peer.addPeer(pid, addr, port):
+        if self.protocol.addPeer(pid, addr, port):
             message = self.protocol.JOIN.packWrap('RES')
             self.peerConn.sendData(message)
         else:
@@ -39,7 +39,7 @@ class JOIN(Message):
 
     def _RES(self, *data):
         (pid, addr, port), = data
-        if self.peer.addPeer(pid, addr, port):
+        if self.protocol.addPeer(pid, addr, port):
             logging.debug('Peer added pid {%s} at %s:%s' % (pid, addr, port))
         else:
             #self.peerConn.sendData('Peer %s exists' % pid)

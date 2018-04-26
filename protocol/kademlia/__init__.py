@@ -15,3 +15,9 @@ class Kademlia(Protocol):
         self._messages.update(extandMessages)
         return True
 
+    def broadcast(self, message, waitReply=True):
+        pass    
+
+    def exit(self):
+        pass
+

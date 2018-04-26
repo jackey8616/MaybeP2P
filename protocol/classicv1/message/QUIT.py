@@ -14,7 +14,7 @@ class QUIT(Message):
         try:
             self.peer.lock.acquire()
             pid = msgData
-            return self.peer.removePeer(pid)
+            return self.protocol.removePeer(pid)
         except Exception as e:
             self.peerConn.sendData('ERRO', e)
         finally:

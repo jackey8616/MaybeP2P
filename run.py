@@ -43,7 +43,7 @@ def main(argv):
             if raw == '':
                 continue
             elif raw == 'peers':
-                for (pid, host) in peer.peers.items():
+                for (pid, host) in peer.ClassicV1._peers.items():
                     print((pid, host))
             elif raw == 'test':
                 print('test')

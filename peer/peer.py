@@ -4,10 +4,8 @@ from uuid import uuid4
 from protocol.classicv1 import ClassicV1
 from protocol.kademlia import Kademlia
 if sys.version_info > (3, 0):
-    import queue
     from .connection import PeerConnection
 else:
-    import Queue as queue
     from connection import PeerConnection
 
 
@@ -34,8 +32,6 @@ class Peer(threading.Thread):
         self.lock = threading.RLock()
 
         self.id = str(uuid4())
-        self.peers = {}
-        self.msgs = queue.Queue()
         logging.info('Inited Peer %s' % self.id)
 
     def _initServerHost(self):
@@ -77,9 +73,8 @@ class Peer(threading.Thread):
 
     def exit(self):
         self.stopped = True
-        message = self.ClassicV1.QUIT.packWrap('REQ')
-        self.sendToNet(message, waitReply=False)
-        self.sendToPeer(self.peerInfo.addr[0], self.peerInfo.addr[1], message, waitReply=False)
+        for (protoName, protocol) in self.protocol.items():
+            protocol.exit()
         
     def sendToPeer(self, host, port, message, pid=None, waitReply=True):
         msgReply = []
@@ -98,30 +93,4 @@ class Peer(threading.Thread):
         for (protoType, msgType, msgData) in msgReply:
             peerConn.protocol[protoType]._messages[msgType].handler(peerConn, msgData)
         return msgReply
-
-    def sendToNet(self, message, waitReply=True):
-        netReply = []
-        for (pid, host) in self.peers.items():
-            netReply.append({ pid: self.sendToPeer(host[0], host[1], message, pid=pid, waitReply=waitReply) })
-        return netReply
-
-    def addPeer(self, pid, addr, port):
-        if pid not in self.peers:
-            self.peers[pid] = (addr, int(port))
-            return True
-        else:
-            return False
-
-    def removePeer(self, pid):
-        try:
-            self.peers.pop(pid)
-            return True
-        except:
-            return False
-
-    def getPeerByHost(self, queryHost):
-        for (pid, host) in self.peers.items():
-            if host == queryHost:
-                return pid
-        return None
 

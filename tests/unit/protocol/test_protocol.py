@@ -9,4 +9,27 @@ class TestProtocol:
 
     def test_wrapper(self, protocol):
         assert protocol.wrapper(None, None, None) == None
+
+    def test_getPeerBy(self, protocol):
+        protocol._peers = {'000': ('111', 222)}
+        assert protocol.getPeerBy(('111', 222)) == '000'
+        assert protocol.getPeerBy(('444', 555)) == None 
  
+    def test_addPeer(self, protocol):
+        protocol._peers = {}
+        assert protocol.addPeer('000', '111', '222') == True
+        assert protocol.addPeer('000', '444', '555') == False
+
+    def test_removePeer(self, protocol):
+        protocol._peers = {'123': ('456', 789)}
+        assert protocol.removePeer('123') == True
+        assert protocol.removePeer('123') == False
+
+    def test_broadcast(self, protocol):
+        with pytest.raises(NotImplementedError):
+            protocol.broadcast(None)
+
+    def test_exit(self, protocol):
+        with pytest.raises(NotImplementedError):
+            protocol.exit()
+

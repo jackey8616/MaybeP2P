@@ -5,11 +5,11 @@ class TestJOIN:
         assert msgJOIN.handler(peerConnection, ' , , , ') == False
         assert msgJOIN.handler(peerConnection, None) == False
         
-        peerConnection.peer.peers = {}
+        msgJOIN.protocol._peers = {}
         assert msgJOIN.handler(peerConnection, 'REQ,123,456,789') == True
         assert msgJOIN.handler(peerConnection, 'REQ,123,456,789') == False
 
-        peerConnection.peer.peers = {}
+        msgJOIN.protocol._peers = {}
         assert msgJOIN.handler(peerConnection, 'RES,123,456,789') == True
         assert msgJOIN.handler(peerConnection, 'RES,123,456,789') == False
     
@@ -17,12 +17,12 @@ class TestJOIN:
 
 
     def test__REQ(self, msgJOIN):
-        msgJOIN.peerConn.peer.peers = {}
+        msgJOIN.protocol._peers = {}
         assert msgJOIN._REQ(('123', '456' ,789)) == True
         assert msgJOIN._REQ(('123', '456', 789)) == False
 
     def test__RES(self, msgJOIN):
-        msgJOIN.peerConn.peer.peers = {}
+        msgJOIN.protocol._peers = {}
         assert msgJOIN._RES(('123', '456', 789)) == True
         assert msgJOIN._RES(('123', '456', 789)) == False
     

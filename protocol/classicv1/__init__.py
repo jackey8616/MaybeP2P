@@ -1,4 +1,4 @@
-import sys
+import sys, traceback
 import dns.resolver
 
 from protocol import Protocol
@@ -17,6 +17,20 @@ class ClassicV1(Protocol):
         }
         self._messages.update(extandMessages)
         return True
+
+    def broadcast(self, message, waitReply=False):
+        netReply = []
+        for (pid, host) in self._peers.items():
+            netReply.append({ pid: self._peer.sendToPeer(host[0], host[1], message, pid=pid, waitReply=waitReply) })
+        return netReply
+
+    def exit(self):
+        try:
+            message = self.QUIT.packWrap('REQ')
+            self.broadcast(message, waitReply=False)
+            self._peer.sendToPeer(self._peer.peerInfo.addr[0], self._peer.peerInfo.addr[1], message, waitReply=False)
+        except:
+            traceback.print_exc()
 
     def _joinNetFromPeer(self, remotePeerAddr):
         addr = remotePeerAddr.split(':')[0]

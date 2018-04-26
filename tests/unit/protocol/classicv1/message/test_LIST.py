@@ -6,12 +6,12 @@ class TestLIST:
 
         assert msgLIST.handler(peerConnection, 'REQ') == True
 
-        peer.peers = {}
+        msgLIST.protocol._peers = {}
         assert msgLIST.handler(peerConnection, 'RES') == False
         data = 'RES,123|456|789,000|111|222'
         assert msgLIST.handler(peerConnection, data) == True
-        assert peer.peers['123'] == ('456', 789)
-        assert peer.peers['000'] == ('111', 222)
+        assert msgLIST.protocol._peers['123'] == ('456', 789)
+        assert msgLIST.protocol._peers['000'] == ('111', 222)
  
         assert msgLIST.handler(peerConnection, 'FOR') == True
 
@@ -25,7 +25,7 @@ class TestLIST:
         assert msgLIST._FOR(('FOR')) == True
 
     def test_pack(self, msgLIST):
-        msgLIST.protocol._peer.peers = {
+        msgLIST.protocol._peers = {
             '123': ('456', 789)
         }
         data = 'RES,123|456|789'

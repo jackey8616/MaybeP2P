@@ -5,6 +5,7 @@ class Protocol:
     def __init__(self, name, peer):
         self._name = name
         self._peer = peer
+        self._peers = {}
         self._messages = {}
 
         self._messageExtand()
@@ -34,4 +35,33 @@ class Protocol:
         except Exception as e:
             traceback.print_exc()
             return None
+
+    def getPeerBy(self, *data):
+        (queryHost, ) = data
+        for (pid, host) in self._peers.items():
+            if host == queryHost:
+                return pid
+        return None
+
+    def addPeer(self, *data):
+        pid, addr, port = data
+        if pid not in self._peers:
+            self._peers[pid] = (addr, int(port))
+            return True
+        else:
+            return False
+
+    def removePeer(self, *data):
+        (pid, ) = data
+        try:
+            self._peers.pop(pid)
+            return True
+        except:
+            return False
+
+    def broadcast(self, message, waitReply=False):
+        raise NotImplementedError
+
+    def exit(self):
+        raise NotImplementedError
 
