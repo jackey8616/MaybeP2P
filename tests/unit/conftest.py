@@ -7,6 +7,7 @@ from protocol.message import Message
 from protocol.message import REPL
 from protocol.classicv1 import ClassicV1
 from protocol.classicv1.message import JOIN, LIST, QUIT, ERRO
+from protocol.kademlia import Kademlia
 
 @pytest.fixture(scope='module')
 def peer(request):
@@ -36,14 +37,14 @@ def protocol(peer):
     return p
 
 @pytest.fixture(scope='module')
-def classicv1(peer):
-    c = ClassicV1(peer)
-    return c
-
-@pytest.fixture(scope='module')
 def message():
     m = Message('TestProtocol')
     return m
+
+@pytest.fixture(scope='module')
+def classicv1(peer):
+    c = ClassicV1(peer)
+    return c
 
 @pytest.fixture(scope='module')
 def msgJOIN(classicv1):
@@ -69,3 +70,7 @@ def msgREPL():
     r = REPL('TestProtocol')
     return r
 
+@pytest.fixture(scope='module')
+def kademlia(peer):
+    k = Kademlia(peer)
+    return k

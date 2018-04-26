@@ -2,6 +2,7 @@ import sys, logging, socket, threading, traceback, copy
 from uuid import uuid4
 
 from protocol.classicv1 import ClassicV1
+from protocol.kademlia import Kademlia
 if sys.version_info > (3, 0):
     import queue
     from .connection import PeerConnection
@@ -57,8 +58,10 @@ class Peer(threading.Thread):
 
     def _initPeerProtocol(self):
         setattr(self, 'ClassicV1', ClassicV1(self))
+        setattr(self, 'Kademlia', Kademlia(self))
         return {
-            'ClassicV1': self.ClassicV1
+            'ClassicV1': self.ClassicV1,
+            'Kademlia': self.Kademlia
         }
 
     def run(self):

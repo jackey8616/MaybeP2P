@@ -16,6 +16,7 @@ class ClassicV1(Protocol):
             'QUIT': QUIT,
         }
         self._messages.update(extandMessages)
+        return True
 
     def _joinNetFromPeer(self, remotePeerAddr):
         addr = remotePeerAddr.split(':')[0]
