@@ -1,12 +1,13 @@
 import pytest
 
 from peer import Peer
+from protocol.classicv1 import ClassicV1
 
 class TestPeer:
 
 #    @pytest.mark.skip()
     def test_peer(self):
-        p = Peer()
+        p = Peer(protocol=ClassicV1)
         assert p.peerInfo.addr[1] == 25565
         p._initServerSock()
         assert p.serverSock

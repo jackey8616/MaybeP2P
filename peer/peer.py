@@ -17,7 +17,7 @@ class PeerInfo:
 
 class Peer(threading.Thread):
 
-    def __init__(self, serverAddr='0.0.0.0', serverPort=25565):
+    def __init__(self, serverAddr='0.0.0.0', serverPort=25565, protocol=ClassicV1):
         threading.Thread.__init__(self)
         self.listenHost = (serverAddr, int(serverPort))
         logging.debug('Listening at %s:%d' % (self.listenHost))
@@ -25,7 +25,7 @@ class Peer(threading.Thread):
         self.peerInfo = PeerInfo((self._initServerHost(), int(serverPort)), 'Active')
         logging.debug('Link IP: %s' % self.peerInfo.addr[0])
 
-        self.protocol = self._initPeerProtocol()
+        self.protocol = self._initPeerProtocol(protocol)
         logging.debug('Protocol loaded.')
 
         self.stopped = False
@@ -52,13 +52,9 @@ class Peer(threading.Thread):
             return False
         return True
 
-    def _initPeerProtocol(self):
-        setattr(self, 'ClassicV1', ClassicV1(self))
-        setattr(self, 'Kademlia', Kademlia(self))
-        return {
-            'ClassicV1': self.ClassicV1,
-            'Kademlia': self.Kademlia
-        }
+    def _initPeerProtocol(self, protocol):
+        setattr(self, protocol.__name__, protocol(self))
+        return self.ClassicV1
 
     def run(self):
         while not self.stopped:
@@ -73,8 +69,7 @@ class Peer(threading.Thread):
 
     def exit(self):
         self.stopped = True
-        for (protoName, protocol) in self.protocol.items():
-            protocol.exit()
+        self.protocol.exit()
         
     def sendToPeer(self, host, port, message, pid=None, waitReply=True, timeout=None):
         msgReply = []
@@ -91,6 +86,6 @@ class Peer(threading.Thread):
         except Exception as e:
             traceback.print_exc()
         for (protoType, msgType, msgData) in msgReply:
-            peerConn.protocol[protoType].handler(peerConn, msgType, msgData)
+            peerConn.protocol.handler(peerConn, msgType, msgData)
         return msgReply
 
