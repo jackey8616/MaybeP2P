@@ -2,7 +2,7 @@ import sys, threading, logging, socket, struct, traceback
 
 class PeerConnection(threading.Thread):
 
-    def __init__(self, peerId, peer, protocol, addr=None, port=None, sock=None):
+    def __init__(self, peerId, peer, protocol, addr=None, port=None, sock=None, timeout=None):
         threading.Thread.__init__(self)
         self.stopped = False
 
@@ -13,7 +13,9 @@ class PeerConnection(threading.Thread):
         else:
             self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            self.sock.settimeout(timeout)
             self.sock.connect((addr, int(port)))
+            self.sock.settimeout(None)
         if sys.version_info > (3, 0):
             self.sd = self.sock.makefile('rw', None)
         else:
@@ -23,7 +25,7 @@ class PeerConnection(threading.Thread):
     def run(self):
         try:
             protoType, msgType, msgData = self.recvData()
-            self.protocol[protoType]._messages[msgType].handler(self, msgData)
+            self.protocol[protoType].handler(self, msgType, msgData)
             logging.debug((protoType, msgType, msgData))
             self.exit()
         except Exception as e:

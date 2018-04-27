@@ -76,10 +76,10 @@ class Peer(threading.Thread):
         for (protoName, protocol) in self.protocol.items():
             protocol.exit()
         
-    def sendToPeer(self, host, port, message, pid=None, waitReply=True):
+    def sendToPeer(self, host, port, message, pid=None, waitReply=True, timeout=None):
         msgReply = []
         try:
-            peerConn = PeerConnection(pid, self, self.protocol, host, port)
+            peerConn = PeerConnection(pid, self, self.protocol, host, port, timeout=None)
             peerConn.sendData(message)
         
             if waitReply:
@@ -91,6 +91,6 @@ class Peer(threading.Thread):
         except Exception as e:
             traceback.print_exc()
         for (protoType, msgType, msgData) in msgReply:
-            peerConn.protocol[protoType]._messages[msgType].handler(peerConn, msgData)
+            peerConn.protocol[protoType].handler(peerConn, msgType, msgData)
         return msgReply
 

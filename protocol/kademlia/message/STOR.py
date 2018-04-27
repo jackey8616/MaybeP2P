@@ -2,7 +2,7 @@ import traceback
 
 from protocol.message import Message
 
-class PONG(Message):
+class STOR(Message):
 
     def __init__(self, protocol):
         Message.__init__(self, protocol)

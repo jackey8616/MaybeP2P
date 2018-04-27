@@ -7,7 +7,9 @@ from protocol.message import Message
 from protocol.message import REPL
 from protocol.classicv1 import ClassicV1
 from protocol.classicv1.message import JOIN, LIST, QUIT, ERRO
+
 from protocol.kademlia import Kademlia
+from protocol.kademlia.utils import Bukket
 
 @pytest.fixture(scope='module')
 def peer(request):
@@ -74,3 +76,8 @@ def msgREPL():
 def kademlia(peer):
     k = Kademlia(peer)
     return k
+
+@pytest.fixture(scope='module')
+def bukket(kademlia):
+    b = Bukket(kademlia)
+    return b

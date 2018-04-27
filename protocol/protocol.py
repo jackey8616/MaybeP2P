@@ -27,6 +27,14 @@ class Protocol:
         (msgLen, msgType, msgData), = msg
         return struct.pack('!12s4sL%ds' % msgLen, self._name.encode(), msgType.encode(), msgLen, msgData.encode())
 
+    def handler(self, peerConn, msgType, msgData):
+        try:
+            message = getattr(self, msgType)
+            message.handler(peerConn, msgData)
+            return True
+        except:
+            return False
+
     def wrapper(self, peerConn, msgType, pkType):
         try:
             msgLen, msgData = getattr(self, msgType).pack(pkType)

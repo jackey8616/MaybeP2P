@@ -7,6 +7,9 @@ class TestProtocol:
     def test__messageExtand(self, protocol):
         assert protocol._messageExtand() == True
 
+    def test_handler(self, protocol):
+        assert protocol.handler(None, None, None) == False
+
     def test_wrapper(self, protocol):
         assert protocol.wrapper(None, None, None) == None
 
