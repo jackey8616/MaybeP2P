@@ -2,7 +2,7 @@ import sys, traceback
 import dns.resolver
 
 from protocol import Protocol
-from protocol.classicv1.message import JOIN, LIST, QUIT
+from protocol.classicv1.message import JOIN, LIST, QUIT, MESG
 
 class ClassicV1(Protocol):
 
@@ -14,6 +14,7 @@ class ClassicV1(Protocol):
             'JOIN': JOIN,
             'LIST': LIST,
             'QUIT': QUIT,
+            'MESG': MESG,
         }
         self._messages.update(extandMessages)
         return True
@@ -50,4 +51,9 @@ class ClassicV1(Protocol):
         port = int(remoteHost.split(':')[1])
         message = self.LIST.packWrap('REQ')
         self._peer.sendToPeer(addr, port, message, timeout=5)
+
+    def sendMessage(self, message, pid=None, host=None):
+        message = self.MESG.packWrap('REQ', message)
+        self._peer.sendToPeer(host[0], host[1], message, timeout=5)
+
 

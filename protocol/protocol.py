@@ -35,12 +35,14 @@ class Protocol:
         except:
             return False
 
-    def getPeerBy(self, *data):
-        (queryHost, ) = data
+    def getPeerInfoBy(self, *data):
+        (query, ) = data
+        if ':' in query:
+            query = (query.split(':')[0], int(query.split(':')[1]))
         for (pid, host) in self._peers.items():
-            if host == queryHost:
-                return pid
-        return None
+            if host == query or (isinstance(query, str) and query in pid):
+                return (pid, host)
+        return (None, None)
 
     def addPeer(self, *data):
         pid, addr, port = data

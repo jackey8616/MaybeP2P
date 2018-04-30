@@ -20,6 +20,6 @@ class Message:
         raise NotImplementedError
 
     def packWrap(self, pkType, *data):
-        dataLen, data = self.pack(pkType)
+        dataLen, data = self.pack(pkType, data)
         return self.protocol._wrap((dataLen, self.__class__.__name__, data))
 

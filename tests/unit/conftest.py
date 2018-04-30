@@ -6,7 +6,7 @@ from protocol import Protocol
 from protocol.message import Message
 from protocol.message import REPL
 from protocol.classicv1 import ClassicV1
-from protocol.classicv1.message import JOIN, LIST, QUIT, ERRO
+from protocol.classicv1.message import JOIN, LIST, QUIT, ERRO, MESG
 
 @pytest.fixture(scope='module')
 def peer(request):
@@ -63,6 +63,11 @@ def msgQUIT(classicv1):
 def msgERRO(classicv1):
     e = ERRO(classicv1)
     return e
+
+@pytest.fixture(scope='module')
+def msgMESG(classicv1):
+    m = MESG(classicv1)
+    return m
 
 @pytest.fixture(scope='module')
 def msgREPL():

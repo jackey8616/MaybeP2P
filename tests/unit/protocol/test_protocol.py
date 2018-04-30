@@ -13,10 +13,11 @@ class TestProtocol:
     #def test_wrapper(self, protocol):
     #    assert protocol.wrapper(None, None, None) == None
 
-    def test_getPeerBy(self, protocol):
+    def test_getPeerInfoBy(self, protocol):
         protocol._peers = {'000': ('111', 222)}
-        assert protocol.getPeerBy(('111', 222)) == '000'
-        assert protocol.getPeerBy(('444', 555)) == None 
+        assert protocol.getPeerInfoBy(('111', 222)) == ('000', ('111', 222))
+        assert protocol.getPeerInfoBy('111:222') == ('000', ('111', 222))
+        assert protocol.getPeerInfoBy(('444', 555)) == (None, None) 
  
     def test_addPeer(self, protocol):
         protocol._peers = {}
