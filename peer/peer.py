@@ -2,7 +2,6 @@ import sys, logging, socket, threading, traceback, copy
 from uuid import uuid4
 
 from protocol.classicv1 import ClassicV1
-from protocol.kademlia import Kademlia
 
 if sys.version_info > (3, 0):
     from .connection import PeerConnection
