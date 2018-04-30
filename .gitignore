@@ -2,7 +2,11 @@ venv2.7/
 venv3.5/
 __pycache__/
 .pytest_cache/
+dist/
+*.egg-info/
+build/
 
+MANIFEST
 .coverage
 *.pyc
 *.swp
