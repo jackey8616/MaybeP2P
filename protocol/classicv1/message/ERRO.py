@@ -19,6 +19,6 @@ class ERRO(Message):
     def _FOR(self, *data):
         return True
 
-    def pack(self, pkType):
+    def pack(self, pkType, *data):
         return (len('ERRO'), 'ERRO')
 

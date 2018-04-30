@@ -3,6 +3,7 @@ from uuid import uuid4
 
 from protocol.classicv1 import ClassicV1
 from protocol.kademlia import Kademlia
+
 if sys.version_info > (3, 0):
     from .connection import PeerConnection
 else:
@@ -74,7 +75,7 @@ class Peer(threading.Thread):
     def sendToPeer(self, host, port, message, pid=None, waitReply=True, timeout=None):
         msgReply = []
         try:
-            peerConn = PeerConnection(pid, self, self.protocol, host, port, timeout=None)
+            peerConn = PeerConnection(pid, self, self.protocol, host, port)
             peerConn.sendData(message)
         
             if waitReply:
@@ -82,10 +83,11 @@ class Peer(threading.Thread):
                 while (oneReply != (None, None, None)):
                     msgReply.append( oneReply )
                     oneReply = peerConn.recvData()
+                
+                for (protoType, msgType, msgData) in msgReply:
+                    peerConn.protocol.handler(peerConn, msgType, msgData)
             peerConn.exit()
         except Exception as e:
             traceback.print_exc()
-        for (protoType, msgType, msgData) in msgReply:
-            peerConn.protocol.handler(peerConn, msgType, msgData)
         return msgReply
 

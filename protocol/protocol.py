@@ -35,15 +35,6 @@ class Protocol:
         except:
             return False
 
-    def wrapper(self, peerConn, msgType, pkType):
-        try:
-            msgLen, msgData = getattr(self, msgType).pack(pkType)
-            message = struct.pack('!12s4sL%ds' % msgLen, self._name.encode(), msgType.encode(), msgLen, msgData.encode())
-            return message
-        except Exception as e:
-            traceback.print_exc()
-            return None
-
     def getPeerBy(self, *data):
         (queryHost, ) = data
         for (pid, host) in self._peers.items():

@@ -16,9 +16,9 @@ class FVAL(Message):
     def _RES(self, *data):
         return True
 
-    def _FOR(self, *date):
+    def _FOR(self, *data):
         return True
 
-    def pack(self, pkType):
+    def pack(self, pkType, *data):
         return True
 

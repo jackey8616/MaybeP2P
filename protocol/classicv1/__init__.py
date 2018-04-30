@@ -49,5 +49,5 @@ class ClassicV1(Protocol):
         addr = remoteHost.split(':')[0]
         port = int(remoteHost.split(':')[1])
         message = self.LIST.packWrap('REQ')
-        self._peer.sendToPeer(addr, port, message)
+        self._peer.sendToPeer(addr, port, message, timeout=5)
 

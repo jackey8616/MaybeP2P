@@ -16,9 +16,9 @@ class PING(Message):
     def _RES(self, *data):
         return Ture
 
-    def _FOR(self, *date):
+    def _FOR(self, *data):
         return Ture
 
-    def pack(self, pkType):
+    def pack(self, pkType, *data):
         return True 
 

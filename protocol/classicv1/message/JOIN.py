@@ -49,7 +49,7 @@ class JOIN(Message):
     def _FOR(self, *data):
         return True
 
-    def pack(self, pkType):
+    def pack(self, pkType, *data):
         data = '%s,%s,%s,%s' % (pkType, self.protocol._peer.id, self.protocol._peer.peerInfo.addr[0], self.protocol._peer.peerInfo.addr[1])
         return (len(data), data)
 

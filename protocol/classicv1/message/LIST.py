@@ -41,7 +41,7 @@ class LIST(Message):
     def _FOR(self, *data):
         return True
 
-    def pack(self, pkType):
+    def pack(self, pkType, *data):
         data = pkType
         if pkType == 'RES':
             for (pid, host) in self.protocol._peers.items():

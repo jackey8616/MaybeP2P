@@ -10,8 +10,8 @@ class TestProtocol:
     def test_handler(self, protocol):
         assert protocol.handler(None, None, None) == False
 
-    def test_wrapper(self, protocol):
-        assert protocol.wrapper(None, None, None) == None
+    #def test_wrapper(self, protocol):
+    #    assert protocol.wrapper(None, None, None) == None
 
     def test_getPeerBy(self, protocol):
         protocol._peers = {'000': ('111', 222)}

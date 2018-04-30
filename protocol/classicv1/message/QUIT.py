@@ -30,7 +30,7 @@ class QUIT(Message):
     def _FOR(self, *data):
         return True
 
-    def pack(self, pkType):
+    def pack(self, pkType, *data):
         data = self.protocol._peer.id
         return len(data), data
 

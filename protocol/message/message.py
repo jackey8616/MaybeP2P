@@ -16,10 +16,10 @@ class Message:
     def _FOR(self, *data):
         raise NotImplementedError
 
-    def pack(self, pkType):
+    def pack(self, pkType, data=None):
         raise NotImplementedError
 
-    def packWrap(self, pkType):
+    def packWrap(self, pkType, *data):
         dataLen, data = self.pack(pkType)
         return self.protocol._wrap((dataLen, self.__class__.__name__, data))
 
