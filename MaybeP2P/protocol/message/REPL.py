@@ -1,6 +1,6 @@
 import sys
 
-from MaybeP2P.protocol.message import Message
+from .message import Message
 
 class REPL(Message):
 

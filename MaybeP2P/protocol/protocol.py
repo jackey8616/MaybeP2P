@@ -1,4 +1,4 @@
-import sys, logging, json, struct, traceback
+import logging, json, struct, traceback
 
 class Protocol:
 

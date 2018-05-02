@@ -1,12 +1,8 @@
-import sys, logging, socket, threading, traceback, copy
+import logging, socket, threading, traceback, copy
 from uuid import uuid4
 
-from MaybeP2P.protocol.classicv1 import ClassicV1
-
-if sys.version_info > (3, 0):
-    from .connection import PeerConnection
-else:
-    from connection import PeerConnection
+from ..protocol.classicv1 import ClassicV1
+from .connection import PeerConnection
 
 
 class PeerInfo:

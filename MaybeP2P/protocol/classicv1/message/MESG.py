@@ -1,6 +1,6 @@
 import logging, traceback
 
-from MaybeP2P.protocol.message import Message
+from ....protocol.message import Message
 
 class MESG(Message):
 
