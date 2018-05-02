@@ -1,7 +1,5 @@
 import pytest
 
-from protocol.message import Message
-
 class TestMessage:
 
     def test_handler(self, message):

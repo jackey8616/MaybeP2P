@@ -1,6 +1,6 @@
 import sys, logging
 
-from peer import Peer
+from MaybeP2P.peer import Peer
 
 if sys.version_info > (3, 0):
     raw_input = input
@@ -20,7 +20,6 @@ def main(argv):
         elif '--sync-DNS=' in each:
             syncDNS = each[11:]
 
-    logging.basicConfig(level=logging.DEBUG)
     if addr:
         peer = Peer(serverAddr=addr.split(':')[0], serverPort=addr.split(':')[1])
     else:

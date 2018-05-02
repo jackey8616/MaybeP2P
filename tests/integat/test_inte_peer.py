@@ -1,7 +1,7 @@
 import pytest
 
-from peer import Peer
-from protocol.classicv1 import ClassicV1
+from MaybeP2P.peer import Peer
+from MaybeP2P.protocol.classicv1 import ClassicV1
 
 class TestPeer:
 

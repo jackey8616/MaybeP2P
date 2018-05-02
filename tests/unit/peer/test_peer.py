@@ -1,13 +1,7 @@
-import pytest, time
-
-from peer.peer import PeerInfo, Peer
+import pytest
 
 class TestPeerInfo:
-
-    def test_peerInfo(self):
-        pi = PeerInfo(('127.0.0.1', 65535), 'Active')
-        assert pi.addr == ('127.0.0.1', 65535)
-        assert pi.status == 'Active'
+    pass
 
 class TestPeer:
 

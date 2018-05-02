@@ -13,7 +13,7 @@ else:
 setup(
     name = 'MaybeP2P',
     packages = find_packages(exclude=['__pycache__', '*.txt']),
-    version = '1.1.11',
+    version = '0.0.1',
     description = 'Simple solution to implement P2P communication into Applications.',
     long_description = long_description,
     long_description_content_type = 'text/markdown',

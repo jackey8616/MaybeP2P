@@ -1,10 +1,10 @@
 import pytest
 
-from peer.peer import Peer
-from peer.connection import PeerConnection
-from protocol import Protocol
-from protocol.message import Message
-from protocol.message import REPL
+from MaybeP2P.peer.peer import Peer
+from MaybeP2P.peer.connection import PeerConnection
+from MaybeP2P.protocol import Protocol
+from MaybeP2P.protocol.message import Message
+from MaybeP2P.protocol.message import REPL
 
 @pytest.fixture(scope='module')
 def peer(request):

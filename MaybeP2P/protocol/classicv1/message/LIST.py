@@ -1,6 +1,6 @@
 import sys, traceback
 
-from protocol.message import Message
+from MaybeP2P.protocol.message import Message
 
 class LIST(Message):
 

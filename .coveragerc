@@ -4,3 +4,4 @@ omit =
     venv*/
     tests/*
     run.py
+    setup.py

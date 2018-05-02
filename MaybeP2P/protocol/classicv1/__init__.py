@@ -1,8 +1,8 @@
 import sys, traceback
 import dns.resolver
 
-from protocol import Protocol
-from protocol.classicv1.message import JOIN, LIST, QUIT, MESG
+from MaybeP2P.protocol import Protocol
+from MaybeP2P.protocol.classicv1.message import JOIN, LIST, QUIT, MESG
 
 class ClassicV1(Protocol):
 

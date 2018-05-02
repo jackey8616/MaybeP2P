@@ -1,7 +1,5 @@
 import pytest
 
-from protocol.protocol import Protocol
-
 class TestProtocol:
 
     def test__messageExtand(self, protocol):

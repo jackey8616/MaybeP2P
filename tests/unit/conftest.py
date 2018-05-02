@@ -1,12 +1,17 @@
 import pytest
 
-from peer.peer import Peer
-from peer.connection import PeerConnection
-from protocol import Protocol
-from protocol.message import Message
-from protocol.message import REPL
-from protocol.classicv1 import ClassicV1
-from protocol.classicv1.message import JOIN, LIST, QUIT, ERRO, MESG
+from MaybeP2P.peer.peer import Peer, PeerInfo
+from MaybeP2P.peer.connection import PeerConnection
+from MaybeP2P.protocol import Protocol
+from MaybeP2P.protocol.message import Message
+from MaybeP2P.protocol.message import REPL
+from MaybeP2P.protocol.classicv1 import ClassicV1
+from MaybeP2P.protocol.classicv1.message import JOIN, LIST, QUIT, ERRO, MESG
+
+@pytest.fixture(scope='module')
+def peerInfo():
+    pi = PeerInfo(('127.0.0.1', 65535), 'Active')
+    return pi
 
 @pytest.fixture(scope='module')
 def peer(request):
