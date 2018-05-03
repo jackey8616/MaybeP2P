@@ -6,8 +6,8 @@ from .message import JOIN, LIST, QUIT, MESG
 
 class ClassicV1(Protocol):
 
-    def __init__(self, peer):
-        Protocol.__init__(self, 'ClassicV1', peer)
+    def __init__(self, peer, name='ClassicV1'):
+        Protocol.__init__(self, name, peer)
 
     def _messageExtand(self):
         extandMessages = {

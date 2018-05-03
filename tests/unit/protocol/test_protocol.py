@@ -1,6 +1,14 @@
 import pytest
 
+from MaybeP2P.protocol import Protocol
+
 class TestProtocol:
+
+    def test_init(self, peer):
+        with pytest.raises(ValueError):
+            p = Protocol(None, peer)
+        with pytest.raises(ValueError):
+            p = Protocol('name', None)
 
     def test__messageExtand(self, protocol):
         assert protocol._messageExtand() == True

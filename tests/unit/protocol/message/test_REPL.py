@@ -17,5 +17,5 @@ class TestREPL:
         assert msgREPL._FOR(()) == True
 
     def test_packet(self, peer, peerConnection, msgREPL):
-        assert msgREPL.packet('REQ', peer, peerConnection) == (len(peer.id), peer.id)
+        assert msgREPL.packet('REQ', peer, peerConnection) == (len(str(peer.id)), str(peer.id))
 

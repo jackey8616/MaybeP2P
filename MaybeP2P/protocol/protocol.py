@@ -3,6 +3,8 @@ import logging, json, struct, traceback
 class Protocol:
 
     def __init__(self, name, peer):
+        if name is None or peer is None:
+            raise ValueError('Name and Peer parameter can not be None.')
         self._name = name
         self._peer = peer
         self._peers = {}
@@ -10,6 +12,7 @@ class Protocol:
 
         self._messageExtand()
         self._messageRegister()
+        self._protocolValidator()
 
     def _messageExtand(self):
         extandMessages = {
@@ -22,6 +25,13 @@ class Protocol:
         for (name, message) in self._messages.items():
             setattr(self, name, message(self))
             self._messages[name] = getattr(self, name)
+
+    def _protocolValidator(self):
+        if self._messages == {}:
+            logging.warning('Protocol initialed with no any loaded messages.')
+            logging.warning('Consider there is _messageExtand() method to load messages?')
+        else:
+            logging.debug('Protocol initialed with %s' % (self._messages))
 
     def _wrap(self, *msg):
         (msgLen, msgType, msgData), = msg

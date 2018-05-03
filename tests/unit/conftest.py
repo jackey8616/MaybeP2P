@@ -15,7 +15,7 @@ def peerInfo():
 
 @pytest.fixture(scope='module')
 def peer(request):
-    p = Peer('0.0.0.0', 25565)
+    p = Peer(serverAddr='0.0.0.0', serverPort=25565)
     p._initServerSock()
     p.start()
 

@@ -1,6 +1,12 @@
 import pytest
 
+from MaybeP2P.protocol.message import Message
+
 class TestMessage:
+
+    def test_init(self):
+        with pytest.raises(ValueError):
+            m = Message(None)
 
     def test_handler(self, message):
         with pytest.raises(NotImplementedError):

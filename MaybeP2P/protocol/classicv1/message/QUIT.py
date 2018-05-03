@@ -31,6 +31,6 @@ class QUIT(Message):
         return True
 
     def pack(self, pkType, *data):
-        data = self.protocol._peer.id
+        data = str(self.protocol._peer.id)
         return len(data), data
 

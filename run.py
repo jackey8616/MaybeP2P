@@ -24,7 +24,6 @@ def main(argv):
         peer = Peer(serverAddr=addr.split(':')[0], serverPort=addr.split(':')[1])
     else:
         peer = Peer()
-    peer._initServerSock()
     peer.start()
     if syncAddr:
         peer.ClassicV1._joinNetFromPeer(syncAddr)

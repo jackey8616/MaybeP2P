@@ -1,5 +1,6 @@
 import os, sys
 from setuptools import setup, find_packages
+import MaybeP2P
 
 _here = os.path.abspath(os.path.dirname(__file__))
 
@@ -13,7 +14,7 @@ else:
 setup(
     name = 'MaybeP2P',
     packages = find_packages(exclude=['__pycache__', '*.txt']),
-    version = '0.0.1',
+    version = MaybeP2P.__version__,
     description = 'Simple solution to implement P2P communication into Applications.',
     long_description = long_description,
     long_description_content_type = 'text/markdown',

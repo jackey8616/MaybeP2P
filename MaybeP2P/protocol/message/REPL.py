@@ -37,7 +37,7 @@ class REPL(Message):
 
     @staticmethod
     def packetS(pkType, peer, peerConn):
-        data = peer.id
+        data = str(peer.id)
         return (len(data), data)
 
     def packet(self, pkType, peer, peerConn):

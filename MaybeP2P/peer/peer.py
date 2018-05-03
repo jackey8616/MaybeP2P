@@ -13,7 +13,7 @@ class PeerInfo:
 
 class Peer(threading.Thread):
 
-    def __init__(self, serverAddr='0.0.0.0', serverPort=25565, protocol=ClassicV1):
+    def __init__(self, uid=uuid4(), serverAddr='0.0.0.0', serverPort=25565, protocol=ClassicV1):
         threading.Thread.__init__(self)
         self.listenHost = (serverAddr, int(serverPort))
         logging.debug('Listening at %s:%d' % (self.listenHost))
@@ -27,7 +27,7 @@ class Peer(threading.Thread):
         self.stopped = False
         self.lock = threading.RLock()
 
-        self.id = str(uuid4())
+        self.id = uid
         logging.info('Inited Peer %s' % self.id)
 
     def _initServerHost(self):
@@ -51,6 +51,10 @@ class Peer(threading.Thread):
     def _initPeerProtocol(self, protocol):
         setattr(self, protocol.__name__, protocol(self))
         return self.ClassicV1
+
+    def start(self):
+        self._initServerSock()
+        super(Peer, self).start()
 
     def run(self):
         while not self.stopped:

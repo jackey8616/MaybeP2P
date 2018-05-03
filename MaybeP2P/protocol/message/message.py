@@ -2,6 +2,8 @@
 class Message:
 
     def __init__(self, protocol):
+        if protocol is None:
+            raise ValueError('Protocol can not be None')
         self.protocol = protocol
 
     def handler(self, peerConn, msgData):
