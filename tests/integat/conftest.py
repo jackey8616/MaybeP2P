@@ -1,7 +1,6 @@
 import pytest
 
-from MaybeP2P.peer.peer import Peer
-from MaybeP2P.peer.connection import PeerConnection
+from MaybeP2P.peer import Peer, PeerConnection
 from MaybeP2P.protocol import Protocol
 from MaybeP2P.protocol.message import Message
 from MaybeP2P.protocol.message import REPL

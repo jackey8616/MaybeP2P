@@ -1,9 +1,7 @@
 import pytest
 
-from MaybeP2P.peer.peer import Peer, PeerInfo
-from MaybeP2P.peer.connection import PeerConnection
-from MaybeP2P.protocol import Protocol
-from MaybeP2P.protocol.message import Message
+from MaybeP2P.peer import Peer, PeerInfo, PeerConnection
+from MaybeP2P.protocol import Protocol, Message
 from MaybeP2P.protocol.message import REPL
 from MaybeP2P.protocol.classicv1 import ClassicV1
 from MaybeP2P.protocol.classicv1.message import JOIN, LIST, QUIT, ERRO, MESG
@@ -27,7 +25,7 @@ def peer(request):
 
 @pytest.fixture(scope='module')
 def peerConnection(request, peer):
-    peerConn = PeerConnection(None, peer, peer.protocol, '0.0.0.0', 25565)
+    peerConn = PeerConnection(None, peer, peer.protocol, host=('0.0.0.0', 25565))
 
     def fin():
         peerConn.exit()
