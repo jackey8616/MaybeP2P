@@ -15,7 +15,6 @@ Also, only support a very basic P2P communication protocol, you need to wrote yo
 
 ```
 >>> p = Peer()
->>> p._initServerSock()
 >>> p.start()
 ...
 >>> p.exit()

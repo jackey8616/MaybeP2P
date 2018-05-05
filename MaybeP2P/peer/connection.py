@@ -15,10 +15,7 @@ class PeerConnection(threading.Thread):
             self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             self.sock.settimeout(timeout)
-            if host:
-                self.sock.connect(host)
-            #elif addr and port:
-            #    self.sock.connect((addr, int(port)))
+            self.sock.connect(host)
             self.sock.settimeout(None)
         if sys.version_info > (3, 0):
             self.sd = self.sock.makefile('rw', None)

@@ -6,7 +6,7 @@ class TestPeerInfo:
 class TestPeer:
 
     def test__initServerHost(self, peer):
-        assert peer._initServerHost() == peer.peerInfo.addr[0]
+        assert peer._initServerAddr() == peer.peerInfo.addr
 
     def test__initServerSock(self, peer):
         peer.listenHost = (None, None)

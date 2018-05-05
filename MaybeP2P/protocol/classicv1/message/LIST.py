@@ -34,7 +34,7 @@ class LIST(Message):
     def _RES(self, *data):
         for each in data[0].split(','):
             (pid, addr, port) = each.split('|')
-            if pid != self.peer.id:
+            if pid != str(self.peer.id):
                 self.protocol.addPeer(pid, addr, port)
         return True
 

@@ -26,8 +26,9 @@ def main(argv):
         peer = Peer()
     peer.start()
     if syncAddr:
-        peer.ClassicV1._joinNetFromPeer(syncAddr)
-        peer.ClassicV1._syncListFromPeer(syncAddr)
+        syncHost = (syncAddr.split(':')[0], int(syncAddr.split(':')[1]))
+        peer.ClassicV1._joinNetFromPeer(syncHost)
+        peer.ClassicV1._syncListFromPeer(syncHost)
     elif syncDNS:
         peer.ClassicV1._joinNetFromDNS(syncDNS)
     else:

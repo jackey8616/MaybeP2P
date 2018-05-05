@@ -1,4 +1,4 @@
-import sys, traceback
+import sys, copy, traceback
 import dns.resolver
 
 from ..protocol import Protocol
@@ -21,7 +21,7 @@ class ClassicV1(Protocol):
 
     def broadcast(self, message, waitReply=False):
         netReply = []
-        for (pid, host) in self._peers.items():
+        for (pid, host) in copy.deepcopy(self._peers).items():
             netReply.append({ pid: self._peer.sendToPeer(message, host, pid=pid, waitReply=waitReply) })
         return netReply
 
@@ -29,13 +29,11 @@ class ClassicV1(Protocol):
         try:
             message = self.QUIT.packWrap('REQ')
             self.broadcast(message, waitReply=False)
-            self._peer.sendToPeer(message, host=self._peer.peerInfo.addr, waitReply=False)
+            self._peer.sendToPeer(message, host=self._peer.peerInfo.getHost(), waitReply=False)
         except:
             traceback.print_exc()
 
     def _joinNetFromPeer(self, remotePeerAddr):
-        #addr = remotePeerAddr.split(':')[0]
-        #port = int(remotePeerAddr.split(':')[1])
         message = self.JOIN.packWrap('REQ')
         self._peer.sendToPeer(message, host=remotePeerAddr)
 
@@ -47,8 +45,6 @@ class ClassicV1(Protocol):
             self._peer.sendToPeer(message, host=(addr, port))
 
     def _syncListFromPeer(self, remoteHost):
-        #addr = remoteHost.split(':')[0]
-        #port = int(remoteHost.split(':')[1])
         message = self.LIST.packWrap('REQ')
         self._peer.sendToPeer(message, host=remoteHost, timeout=5)
 

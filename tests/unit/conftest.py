@@ -8,7 +8,7 @@ from MaybeP2P.protocol.classicv1.message import JOIN, LIST, QUIT, ERRO, MESG
 
 @pytest.fixture(scope='module')
 def peerInfo():
-    pi = PeerInfo(('127.0.0.1', 65535), 'Active')
+    pi = PeerInfo('pid', ('127.0.0.1', 65535), 'Active')
     return pi
 
 @pytest.fixture(scope='module')

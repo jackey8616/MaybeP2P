@@ -50,6 +50,6 @@ class JOIN(Message):
         return True
 
     def pack(self, pkType, *data):
-        data = '%s,%s,%s,%s' % (pkType, self.protocol._peer.id, self.protocol._peer.peerInfo.addr[0], self.protocol._peer.peerInfo.addr[1])
+        data = '%s,%s,%s,%d' % (pkType, self.protocol._peer.id, self.protocol._peer.peerInfo.addr, self.protocol._peer.peerInfo.port)
         return (len(data), data)
 

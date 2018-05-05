@@ -1,5 +1,7 @@
 import logging, json, struct, traceback
 
+from ..peer.peerinfo import PeerInfo
+
 class Protocol:
 
     def __init__(self, name, peer):
@@ -8,6 +10,7 @@ class Protocol:
         self._name = name
         self._peer = peer
         self._peers = {}
+        self._peersInfo = {}
         self._messages = {}
 
         self._messageExtand()
@@ -58,6 +61,7 @@ class Protocol:
         pid, addr, port = data
         if pid not in self._peers:
             self._peers[pid] = (addr, int(port))
+            self._peersInfo[pid] = PeerInfo(pid, (addr, port), None)
             return True
         else:
             return False

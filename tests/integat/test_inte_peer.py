@@ -8,12 +8,12 @@ class TestPeer:
 #    @pytest.mark.skip()
     def test_peer(self):
         p = Peer(protocol=ClassicV1)
-        assert p.peerInfo.addr[1] == 25565
+        assert p.peerInfo.port == 25565
         p.start()
         assert p.serverSock
 
         p2 = Peer(serverPort=25566)
-        assert p2.peerInfo.addr[1] == 25566
+        assert p2.peerInfo.port == 25566
         p2.start()
 
         p2.ClassicV1._joinNetFromPeer('0.0.0.0:25565')

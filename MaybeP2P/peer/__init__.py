@@ -7,13 +7,15 @@ from .connection import PeerConnection
 
 class Peer(threading.Thread):
 
-    def __init__(self, uid=uuid4(), serverAddr='0.0.0.0', serverPort=25565, protocol=ClassicV1):
+    def __init__(self, pid=uuid4(), serverAddr='0.0.0.0', serverPort=25565, protocol=ClassicV1):
         threading.Thread.__init__(self)
+        self.id = pid
+
         self.listenHost = (serverAddr, int(serverPort))
         logging.debug('Listening at %s:%d' % (self.listenHost))
 
-        self.peerInfo = PeerInfo((self._initServerHost(), int(serverPort)), 'Active')
-        logging.debug('Link IP: %s' % self.peerInfo.addr[0])
+        self.peerInfo = PeerInfo(pid, (self._initServerAddr(), serverPort), 'Active')
+        logging.debug('Link IP: %s' % self.peerInfo.addr)
 
         self.protocol = self._initPeerProtocol(protocol)
         logging.debug('Protocol loaded.')
@@ -21,10 +23,9 @@ class Peer(threading.Thread):
         self.stopped = False
         self.lock = threading.RLock()
 
-        self.id = uid
         logging.info('Inited Peer %s' % self.id)
 
-    def _initServerHost(self):
+    def _initServerAddr(self):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.connect(('www.google.com', 80))
         host = s.getsockname()[0]
