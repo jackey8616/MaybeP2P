@@ -25,7 +25,7 @@ def peer(request):
 
 @pytest.fixture(scope='module')
 def peerConnection(request, peer):
-    peerConn = PeerConnection(None, peer, peer.protocol, host=('0.0.0.0', 25565))
+    peerConn = PeerConnection(None, peer, host=('0.0.0.0', 25565))
 
     def fin():
         peerConn.exit()

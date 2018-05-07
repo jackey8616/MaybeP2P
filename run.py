@@ -42,8 +42,8 @@ def main(argv):
             if raw == '':
                 continue
             elif raw == 'peers':
-                for (pid, host) in peer.ClassicV1._peers.items():
-                    print((pid, host))
+                for (pid, peerInfo) in peer.ClassicV1._peersInfo.items():
+                    print((pid, peerInfo.getHost()))
             elif raw.startswith('send'):
                 host = peer.ClassicV1.getPeerInfoBy(raw.split(' ')[1])
                 message = raw.split(' ')[2]

@@ -21,8 +21,8 @@ class ClassicV1(Protocol):
 
     def broadcast(self, message, waitReply=False):
         netReply = []
-        for (pid, host) in copy.deepcopy(self._peers).items():
-            netReply.append({ pid: self._peer.sendToPeer(message, host, pid=pid, waitReply=waitReply) })
+        for (pid, peerInfo) in copy.deepcopy(self._peersInfo).items():
+            netReply.append({ pid: self._peer.sendToPeer(message, peerInfo.getHost(), pid=pid, waitReply=waitReply) })
         return netReply
 
     def exit(self):

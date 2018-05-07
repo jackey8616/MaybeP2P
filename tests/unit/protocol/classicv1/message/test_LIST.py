@@ -1,4 +1,6 @@
 
+from MaybeP2P.peer import PeerInfo
+
 class TestLIST:
 
     def test_handler(self, peer, peerConnection, msgLIST):
@@ -6,12 +8,12 @@ class TestLIST:
 
         assert msgLIST.handler(peerConnection, 'REQ') == True
 
-        msgLIST.protocol._peers = {}
+        msgLIST.protocol._peersInfo = {}
         assert msgLIST.handler(peerConnection, 'RES') == False
-        data = 'RES,123|456|789,000|111|222'
+        data = 'RES,123|0.0.0.0|25565,456|0.0.0.0|25566'
         assert msgLIST.handler(peerConnection, data) == True
-        assert msgLIST.protocol._peers['123'] == ('456', 789)
-        assert msgLIST.protocol._peers['000'] == ('111', 222)
+        assert msgLIST.protocol._peersInfo['123'].getHost() == ('0.0.0.0', 25565)
+        assert msgLIST.protocol._peersInfo['456'].getHost() == ('0.0.0.0', 25566)
  
         assert msgLIST.handler(peerConnection, 'FOR') == True
 
@@ -25,9 +27,8 @@ class TestLIST:
         assert msgLIST._FOR(('FOR')) == True
 
     def test_pack(self, msgLIST):
-        msgLIST.protocol._peers = {
-            '123': ('456', 789)
-        }
-        data = 'RES,123|456|789'
+        pi = PeerInfo('123', ('0.0.0.0', 25565), 'Active')
+        msgLIST.protocol._peersInfo = { pi.pid: pi }
+        data = 'RES,123|0.0.0.0|25565'
         assert msgLIST.pack('RES') == (len(data), data)
 

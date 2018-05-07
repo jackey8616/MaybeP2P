@@ -9,8 +9,10 @@ class Peer(threading.Thread):
 
     def __init__(self, pid=uuid4(), serverAddr='0.0.0.0', serverPort=25565, protocol=ClassicV1):
         threading.Thread.__init__(self)
-        self.id = pid
+        self.stopped = False
+        self.lock = threading.RLock()
 
+        self.id = pid
         self.listenHost = (serverAddr, int(serverPort))
         logging.debug('Listening at %s:%d' % (self.listenHost))
 
@@ -19,9 +21,6 @@ class Peer(threading.Thread):
 
         self.protocol = self._initPeerProtocol(protocol)
         logging.debug('Protocol loaded.')
-
-        self.stopped = False
-        self.lock = threading.RLock()
 
         logging.info('Inited Peer %s' % self.id)
 
@@ -55,7 +54,7 @@ class Peer(threading.Thread):
         while not self.stopped:
             try:
                 clientSock, clientAddr = self.serverSock.accept()
-                peerConn = PeerConnection(None, self, self.protocol, sock=clientSock)
+                peerConn = PeerConnection(None, self, sock=clientSock)
                 peerConn.start()
             except KeyboardInterrupt:
                 self.stopped = True
@@ -69,7 +68,7 @@ class Peer(threading.Thread):
     def sendToPeer(self, message, host, pid=None, waitReply=True, timeout=None):
         msgReply = []
         try:
-            peerConn = PeerConnection(pid, self, self.protocol, host=host)
+            peerConn = PeerConnection(pid, self, host=host)
             peerConn.sendData(message)
 
             if waitReply:

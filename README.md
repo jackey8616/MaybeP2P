@@ -3,7 +3,7 @@ This is a very simple P2P framework for implement peer-to-peer system into Appli
   
 ## Notice  
 Right now this framework does not support any NAT hole paunching.  
-Also, only support a very basic P2P communication protocol, you need to wrote your route rule by youself.  
+Also, only support a very basic P2P communication protocol, you need to wrote your route rule by yourself.  
   
 ## Feature
 
@@ -14,11 +14,12 @@ Also, only support a very basic P2P communication protocol, you need to wrote yo
 `pip install MaybeP2P`
 
 ```
+>>> from MaybeP2P.peer import Peer
 >>> p = Peer()
 >>> p.start()
 ...
 >>> p.exit()
-Ctrl+D
 ```
 ## Other  
 Feel free to RP to help me imporve.  
+

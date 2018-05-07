@@ -44,7 +44,7 @@ class LIST(Message):
     def pack(self, pkType, *data):
         data = pkType
         if pkType == 'RES':
-            for (pid, host) in self.protocol._peers.items():
-                data += ',%s|%s|%s' % (pid, host[0], host[1])
+            for (pid, peerInfo) in self.protocol._peersInfo.items():
+                data += ',%s|%s|%s' % (pid, peerInfo.addr, peerInfo.port)
         return len(data), data
 

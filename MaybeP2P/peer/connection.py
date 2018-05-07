@@ -2,12 +2,13 @@ import sys, threading, logging, socket, struct, traceback
 
 class PeerConnection(threading.Thread):
 
-    def __init__(self, peerId, peer, protocol, sock=None, timeout=1, host=None):
+    def __init__(self, pid, peer, host=None, sock=None, timeout=1):
         threading.Thread.__init__(self)
         self.stopped = False
 
-        self.id = peerId
+        self.id = pid
         self.peer = peer
+        self.protocol = peer.protocol
         self.timeout = timeout
         if sock:
             self.sock = sock
@@ -21,7 +22,6 @@ class PeerConnection(threading.Thread):
             self.sd = self.sock.makefile('rw', None)
         else:
             self.sd = self.sock.makefile('rw', 0)
-        self.protocol = protocol
 
     def run(self):
         try:
