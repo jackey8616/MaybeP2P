@@ -44,7 +44,7 @@ class Peer(threading.Thread):
 
     def _initPeerProtocol(self, protocol):
         setattr(self, protocol.__name__, protocol(self))
-        return self.ClassicV1
+        return getattr(self, protocol.__name__)
 
     def start(self):
         self._initServerSock()

@@ -45,9 +45,9 @@ def main(argv):
                 for (pid, peerInfo) in peer.ClassicV1._peersInfo.items():
                     print((pid, peerInfo.getHost()))
             elif raw.startswith('send'):
-                host = peer.ClassicV1.getPeerInfoBy(raw.split(' ')[1])
+                (pid, peerinfo) = peer.ClassicV1.getPeerInfoBy(raw.split(' ')[1])
                 message = raw.split(' ')[2]
-                peer.ClassicV1.sendMessage(message, host=host[1])
+                peer.ClassicV1.sendMessage(message, host=peerinfo.getHost())
         except KeyboardInterrupt:
             peer.exit()
             break

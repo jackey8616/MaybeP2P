@@ -15,9 +15,9 @@ class Protocol:
         self._messageRegister(self._messages)
         self._protocolValidator()
 
-    def _messageRegister(self, _messages):
+    def _messageRegister(self, _messages, force=False):
         for (name, message) in _messages.items():
-            if not hasattr(self, name):
+            if not hasattr(self, name) or force:
                 setattr(self, name, message(self))
                 self._messages[name] = getattr(self, name)
                 logging.debug('Registered message %s' % name)
