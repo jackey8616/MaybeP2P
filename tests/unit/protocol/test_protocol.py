@@ -11,9 +11,6 @@ class TestProtocol:
         with pytest.raises(ValueError):
             p = Protocol('name', None)
 
-    def test__messageExtand(self, protocol):
-        assert protocol._messageExtand() == True
-
     def test_handler(self, protocol):
         assert protocol.handler(None, None, None) == False
 

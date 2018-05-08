@@ -7,17 +7,12 @@ from .message import JOIN, LIST, QUIT, MESG
 class ClassicV1(Protocol):
 
     def __init__(self, peer, name='ClassicV1'):
-        Protocol.__init__(self, name, peer)
-
-    def _messageExtand(self):
-        extandMessages = {
+        Protocol.__init__(self, name, peer, {
             'JOIN': JOIN,
             'LIST': LIST,
             'QUIT': QUIT,
-            'MESG': MESG,
-        }
-        self._messages.update(extandMessages)
-        return True
+            'MESG': MESG
+        })
 
     def broadcast(self, message, waitReply=False):
         netReply = []

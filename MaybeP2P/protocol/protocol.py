@@ -4,36 +4,31 @@ from ..peer.peerinfo import PeerInfo
 
 class Protocol:
 
-    def __init__(self, name, peer):
+    def __init__(self, name, peer, messages={}):
         if name is None or peer is None:
             raise ValueError('Name and Peer parameter can not be None.')
         self._name = name
         self._peer = peer
         self._peersInfo = {}
-        self._messages = {}
+        self._messages = messages
 
-        self._messageExtand()
-        self._messageRegister()
+        self._messageRegister(self._messages)
         self._protocolValidator()
 
-    def _messageExtand(self):
-        extandMessages = {
-            # Put messages in here for protocol extand.
-        }
-        self._messages.update(extandMessages)
-        return True
+    def _messageRegister(self, _messages):
+        for (name, message) in _messages.items():
+            if not hasattr(self, name):
+                setattr(self, name, message(self))
+                self._messages[name] = getattr(self, name)
+                logging.debug('Registered message %s' % name)
+            else:
+                logging.debug('Message %s duplicated. ignored.' % name)
 
-    def _messageRegister(self):
-        for (name, message) in self._messages.items():
-            setattr(self, name, message(self))
-            self._messages[name] = getattr(self, name)
 
     def _protocolValidator(self):
         if self._messages == {}:
-            logging.warning('Protocol initialed with no any loaded messages.')
-            logging.warning('Consider there is _messageExtand() method to load messages?')
-        else:
-            logging.debug('Protocol initialed with %s' % (self._messages))
+            logging.warning('Protocol initialized with no any loaded messages.')
+            logging.warning('Consider there is _messageExtand() method to add messages?')
 
     def _wrap(self, *msg):
         (msgLen, msgType, msgData), = msg
