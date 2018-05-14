@@ -18,10 +18,7 @@ class PeerConnection(threading.Thread):
             self.sock.settimeout(timeout)
             self.sock.connect(host)
             self.sock.settimeout(None)
-        if sys.version_info > (3, 0):
-            self.sd = self.sock.makefile('rw', None)
-        else:
-            self.sd = self.sock.makefile('rw', 0)
+        self.sd = self.sock.makefile('rw', None if sys.version_info > (3, 0) else 0)
 
     def run(self):
         try:
