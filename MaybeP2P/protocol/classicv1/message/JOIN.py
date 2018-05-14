@@ -31,7 +31,7 @@ class JOIN(Message):
         (pid, addr, port), = data
         if self.protocol.addPeer(pid, addr, port):
             message = self.protocol.JOIN.packWrap('RES')
-            self.peerConn.sendData(message)
+            self.peer.sendToPeer(message, (addr, int(port)), pid=pid)
         else:
             #self.peerConn.sendData('Peer %s exists' % pid)
             return False

@@ -47,7 +47,7 @@ class Protocol:
         if ':' in query:
             query = (query.split(':')[0], int(query.split(':')[1]))
         for (pid, peerInfo) in self._peersInfo.items():
-            if peerInfo.getHost() == query or query in peerInfo.pid:
+            if peerInfo.host == query or query in peerInfo.pid:
                 return (pid, peerInfo)
         return (None, None)
 
@@ -64,7 +64,7 @@ class Protocol:
         try:
             if ':' in target:
                 for (pid, peerInfo) in self._peersInfo.items():
-                    if peerInfo.getHost() == (target.split(':')[0], int(target.split(':')[1])):
+                    if peerInfo.host == (target.split(':')[0], int(target.split(':')[1])):
                         self._peersInfo.pop(pid)
                         return True
             elif target in self._peersInfo:

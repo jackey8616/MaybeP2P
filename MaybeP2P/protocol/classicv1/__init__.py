@@ -14,17 +14,17 @@ class ClassicV1(Protocol):
             'MESG': MESG
         })
 
-    def broadcast(self, message, waitReply=False):
+    def broadcast(self, message):
         netReply = []
         for (pid, peerInfo) in copy.deepcopy(self._peersInfo).items():
-            netReply.append({ pid: self._peer.sendToPeer(message, peerInfo.getHost(), pid=pid, waitReply=waitReply) })
+            netReply.append({ pid: self._peer.sendToPeer(message, peerInfo.host, pid=pid) })
         return netReply
 
     def exit(self):
         try:
             message = self.QUIT.packWrap('REQ')
-            self.broadcast(message, waitReply=False)
-            self._peer.sendToPeer(message, host=self._peer.peerInfo.getHost(), waitReply=False)
+            self.broadcast(message)
+            self._peer.sendToPeer(message, host=self._peer.peerInfo.host)
         except:
             traceback.print_exc()
 

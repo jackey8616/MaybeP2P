@@ -65,20 +65,11 @@ class Peer(threading.Thread):
         self.stopped = True
         self.protocol.exit()
 
-    def sendToPeer(self, message, host, pid=None, waitReply=True, timeout=None):
+    def sendToPeer(self, message, host, pid=None, timeout=None):
         msgReply = []
         try:
             peerConn = PeerConnection(pid, self, host=host)
             peerConn.sendData(message)
-
-            if waitReply:
-                oneReply = peerConn.recvData()
-                while (oneReply != (None, None, None)):
-                    msgReply.append( oneReply )
-                    oneReply = peerConn.recvData()
-
-                for (protoType, msgType, msgData) in msgReply:
-                    peerConn.protocol.handler(peerConn, msgType, msgData)
             peerConn.exit()
         except Exception as e:
             traceback.print_exc()

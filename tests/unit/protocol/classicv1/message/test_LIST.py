@@ -12,8 +12,8 @@ class TestLIST:
         assert msgLIST.handler(peerConnection, 'RES') == False
         data = 'RES,123|0.0.0.0|25565,456|0.0.0.0|25566'
         assert msgLIST.handler(peerConnection, data) == True
-        assert msgLIST.protocol._peersInfo['123'].getHost() == ('0.0.0.0', 25565)
-        assert msgLIST.protocol._peersInfo['456'].getHost() == ('0.0.0.0', 25566)
+        assert msgLIST.protocol._peersInfo['123'].host == ('0.0.0.0', 25565)
+        assert msgLIST.protocol._peersInfo['456'].host == ('0.0.0.0', 25566)
  
         assert msgLIST.handler(peerConnection, 'FOR') == True
 
